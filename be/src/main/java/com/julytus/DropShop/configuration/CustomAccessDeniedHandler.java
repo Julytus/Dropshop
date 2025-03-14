@@ -1,8 +1,8 @@
 package com.julytus.DropShop.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.julytus.EBook.dto.response.ErrorResponse;
-import com.julytus.EBook.exception.ErrorCode;
+import com.julytus.DropShop.dto.response.ErrorResponse;
+import com.julytus.DropShop.exception.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;

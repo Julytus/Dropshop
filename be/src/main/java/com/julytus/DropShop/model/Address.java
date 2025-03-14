@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
+@Table(name = "addresses")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
