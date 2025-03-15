@@ -11,7 +11,10 @@ const LoginRegister = () => {
 
   // State cho form đăng ký
   const [registerData, setRegisterData] = useState({
-    email: ''
+    email: '',
+    fullName: '',
+    password: '',
+    retype: ''
   });
 
   // Handlers cho form đăng nhập
