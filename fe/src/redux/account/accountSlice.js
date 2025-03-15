@@ -44,10 +44,19 @@ export const accountSlice = createSlice({
         state.userProfile = action.payload;
       },
       doLogoutAction: (state) => {
-        webSocketService.disconnectAll();
+        
         state.isAuthenticated = false;
-        state.userProfile = null;
+        state.userProfile = {
+          id: "",
+          fullName: "",
+          email: "",
+          phoneNumber: "",
+          avatarUrl: "",
+          role: ""
+        };
+        
         localStorage.removeItem('token');
+
       },
     },
     extraReducers: (builder) => {

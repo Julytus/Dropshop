@@ -2,12 +2,13 @@ import axios from "../utils/axios-customize";
 
 const token = localStorage.getItem('token');
 
+//Auth
 export const callRegister = async ({ email, password, fullName }) => {
     try {
         const response = await axios.post('/api/v1/auth/sign-up', {
             email,
             password,
-            fullName
+            full_name: fullName
         });
         return response.data;
     } catch (error) {
