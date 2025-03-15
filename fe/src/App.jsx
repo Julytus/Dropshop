@@ -8,6 +8,7 @@ import {
 import Header from "./components/header";
 import Footer from "./components/footer";
 import Home from "./pages/home";
+import LoginRegister from "./pages/loginregister";
 import Error404 from "./components/error404";
 import Loading from "./components/loading";
 export default function App() {
@@ -29,12 +30,12 @@ export default function App() {
 
   const router = createBrowserRouter([
     {
-      path: "/home",
+      path: "/sign-in",
       element: <Layout />,
       errorElement: <Error404 />,
 
       children: [
-        {index: true, element: <Home />},
+        {index: true, element: <LoginRegister />},
       ]
     },
     {
@@ -49,8 +50,7 @@ export default function App() {
   return (
     <>
       {!isLoading || 
-        window.location.pathname === "/login" ||
-        window.location.pathname === "/register" ? 
+        window.location.pathname === "/sign-in" ? 
         <RouterProvider router={router} /> : <Loading />}
     </>
   );

@@ -3,9 +3,6 @@ import React, { useState } from 'react';
 const TopBar = () => {
     const [showLanguageMenu, setShowLanguageMenu] = useState(false);
     const [showCurrencyMenu, setShowCurrencyMenu] = useState(false);
-    
-    const [selectedLanguage, setSelectedLanguage] = useState('English');
-    const [selectedCurrency, setSelectedCurrency] = useState('USD');
 
     const handleLanguageChange = (language) => {
         setSelectedLanguage(language);
@@ -26,48 +23,6 @@ const TopBar = () => {
                     </div>
                     <div className="col-auto d-none d-md-block">
                         <div className="topbar-menu d-flex flex-row-reverse">
-                            <ul className="header-lan-curr">
-                                <li>
-                                    <a href="#" onClick={(e) => {
-                                        e.preventDefault();
-                                        setShowLanguageMenu(!showLanguageMenu);
-                                    }}>
-                                        {selectedLanguage}
-                                    </a>
-                                    {showLanguageMenu && (
-                                        <ul className="curr-lan-sub-menu">
-                                            <li><a href="#" onClick={(e) => {
-                                                e.preventDefault();
-                                                handleLanguageChange('Français');
-                                            }}>Français</a></li>
-                                            <li><a href="#" onClick={(e) => {
-                                                e.preventDefault();
-                                                handleLanguageChange('Deutsch');
-                                            }}>Deutsch</a></li>
-                                        </ul>
-                                    )}
-                                </li>
-                                <li>
-                                    <a href="#" onClick={(e) => {
-                                        e.preventDefault();
-                                        setShowCurrencyMenu(!showCurrencyMenu);
-                                    }}>
-                                        {selectedCurrency}
-                                    </a>
-                                    {showCurrencyMenu && (
-                                        <ul className="curr-lan-sub-menu">
-                                            <li><a href="#" onClick={(e) => {
-                                                e.preventDefault();
-                                                handleCurrencyChange('EUR');
-                                            }}>EUR</a></li>
-                                            <li><a href="#" onClick={(e) => {
-                                                e.preventDefault();
-                                                handleCurrencyChange('GBP');
-                                            }}>GBP</a></li>
-                                        </ul>
-                                    )}
-                                </li>
-                            </ul>
                             <ul>
                                 <li>
                                     <a href="#">
@@ -77,6 +32,16 @@ const TopBar = () => {
                                 <li>
                                     <a href="#">
                                         <i className="fa fa-truck"></i> Order Status
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/sign-in">
+                                        <i className="fa fa-user"></i> SignIn
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/sign-in">
+                                        <i className="fa fa-plus"></i> SignUp
                                     </a>
                                 </li>
                             </ul>

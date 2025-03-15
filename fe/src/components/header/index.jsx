@@ -34,7 +34,7 @@ const Header = () => {
     // Sử dụng useCallback để tránh tạo mới function khi re-render
     const handleOffcanvasOpen = useCallback((offcanvasId) => {
         setActiveOffcanvas(offcanvasId);
-        document.body.classList.add('offcanvas-open');
+        document.body.classList.add('header-offcanvas-open');
     }, []);
 
     const handleOffcanvasClose = useCallback((e) => {
@@ -43,11 +43,11 @@ const Header = () => {
             e.stopPropagation();
         }
         setActiveOffcanvas(null);
-        document.body.classList.remove('offcanvas-open');
+        document.body.classList.remove('header-offcanvas-open');
     }, []);
 
     return (
-        <>
+        <div className="header-wrapper">
             {/* Normal Header */}
             <div className="header-section section section-fluid bg-white d-none d-xl-block">
                 <div className="container">
@@ -129,7 +129,7 @@ const Header = () => {
                 className={`offcanvas-overlay ${activeOffcanvas ? 'offcanvas-open' : ''}`} 
                 onClick={handleOffcanvasClose}
             ></div>
-        </>
+        </div>
     );
 };
 
