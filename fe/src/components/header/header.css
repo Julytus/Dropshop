@@ -1,9 +1,14 @@
+/* Thêm scope/namespace cho tất cả CSS của header */
+.header-wrapper * {
+    box-sizing: border-box;
+}
+
 /* Offcanvas Common Styles */
-.offcanvas {
+.header-wrapper .offcanvas {
     position: fixed;
     top: 0;
     right: -100%;
-    width: 400px;
+    width: 450px;
     height: 100vh;
     background: #fff;
     z-index: 9999;
@@ -13,19 +18,19 @@
     visibility: hidden;
 }
 
-.offcanvas.offcanvas-open {
+.header-wrapper .offcanvas.offcanvas-open {
     right: 0;
     visibility: visible;
 }
 
-.offcanvas .inner {
+.header-wrapper .offcanvas .inner {
     padding: 20px;
     position: relative;
     height: 100%;
 }
 
 /* Offcanvas Close Button */
-.offcanvas-close {
+.header-wrapper .offcanvas-close {
     position: absolute;
     top: 20px;
     right: 20px;
@@ -41,7 +46,7 @@
     transition: all 0.3s ease;
 }
 
-.offcanvas-close:hover {
+.header-wrapper .offcanvas-close:hover {
     color: #F8796C;
     transform: rotate(90deg);
 }
@@ -63,32 +68,32 @@
 }
 
 /* Offcanvas Search */
-.offcanvas-search .search-description {
+.header-wrapper .offcanvas-search .search-description {
     margin-top: 15px;
     font-size: 14px;
 }
 
-.offcanvas-search .search-description span {
+.header-wrapper .offcanvas-search .search-description span {
     display: block;
     margin-bottom: 5px;
     color: #666;
 }
 
-.offcanvas-search-form input, 
-.offcanvas-search-form select {
+.header-wrapper .offcanvas-search-form input, 
+.header-wrapper .offcanvas-search-form select {
     transition: all 0.3s ease;
     border: 1px solid #e5e5e5;
     padding: 8px 15px;
 }
 
-.offcanvas-search-form input:focus, 
-.offcanvas-search-form select:focus {
+.header-wrapper .offcanvas-search-form input:focus, 
+.header-wrapper .offcanvas-search-form select:focus {
     border-color: #F8796C;
     outline: none;
 }
 
 /* Offcanvas Cart & Wishlist */
-.minicart-product-list {
+.header-wrapper .minicart-product-list {
     margin: 0;
     padding: 0;
     list-style: none;
@@ -96,34 +101,34 @@
     overflow-y: auto;
 }
 
-.minicart-product-list li {
+.header-wrapper .minicart-product-list li {
     display: flex;
     padding: 20px 0;
     border-bottom: 1px solid #eee;
     transition: background-color 0.3s ease;
 }
 
-.minicart-product-list li:hover {
+.header-wrapper .minicart-product-list li:hover {
     background-color: #f9f9f9;
 }
 
-.minicart-product-list .image {
+.header-wrapper .minicart-product-list .image {
     width: 80px;
     margin-right: 15px;
     transition: transform 0.3s ease;
 }
 
-.minicart-product-list .image:hover {
+.header-wrapper .minicart-product-list .image:hover {
     transform: translateY(-3px);
 }
 
-.minicart-product-list .content {
+.header-wrapper .minicart-product-list .content {
     flex: 1;
     position: relative;
     padding-right: 25px;
 }
 
-.minicart-product-list .remove {
+.header-wrapper .minicart-product-list .remove {
     position: absolute;
     top: 0;
     right: 0;
@@ -132,48 +137,48 @@
     transition: all 0.3s ease;
 }
 
-.minicart-product-list .remove:hover {
+.header-wrapper .minicart-product-list .remove:hover {
     color: #F8796C;
     transform: rotate(90deg);
 }
 
 /* Offcanvas Mobile Menu */
-.offcanvas-mobile-menu {
+.header-wrapper .offcanvas-mobile-menu {
     width: 300px;
 }
 
-.offcanvas-menu ul {
+.header-wrapper .offcanvas-menu ul {
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
-.offcanvas-menu li {
+.header-wrapper .offcanvas-menu li {
     position: relative;
     border-bottom: 1px solid #eee;
     transition: background-color 0.3s ease;
 }
 
-.offcanvas-menu li:hover {
+.header-wrapper .offcanvas-menu li:hover {
     background-color: #f9f9f9;
 }
 
-.offcanvas-menu .menu-text {
+.header-wrapper .offcanvas-menu .menu-text {
     display: block;
     padding: 10px 0;
     transition: color 0.3s ease;
 }
 
-.offcanvas-menu a:hover .menu-text {
+.header-wrapper .offcanvas-menu a:hover .menu-text {
     color: #F8796C;
 }
 
-.offcanvas-menu .sub-menu {
+.header-wrapper .offcanvas-menu .sub-menu {
     display: none;
     padding-left: 15px;
 }
 
-.menu-expand {
+.header-wrapper .menu-expand {
     position: absolute;
     right: 0;
     top: 12px;
@@ -183,18 +188,18 @@
     transition: transform 0.3s ease;
 }
 
-.menu-expand.active {
+.header-wrapper .menu-expand.active {
     transform: rotate(90deg);
 }
 
 /* Buttons in Cart & Wishlist */
-.buttons {
+.header-wrapper .buttons {
     margin-top: 20px;
     display: flex;
     gap: 10px;
 }
 
-.btn {
+.header-wrapper .btn {
     padding: 10px 20px;
     border-radius: 0;
     text-transform: uppercase;
@@ -205,7 +210,7 @@
     overflow: hidden;
 }
 
-.btn:after {
+.header-wrapper .btn:after {
     content: '';
     position: absolute;
     top: 50%;
@@ -219,11 +224,11 @@
     transform-origin: 50% 50%;
 }
 
-.btn:focus:not(:active)::after {
-    animation: ripple 1s ease-out;
+.header-wrapper .btn:focus:not(:active)::after {
+    animation: header-ripple 1s ease-out;
 }
 
-@keyframes ripple {
+@keyframes header-ripple {
     0% {
         transform: scale(0, 0);
         opacity: 1;
@@ -238,132 +243,131 @@
     }
 }
 
-.btn-dark {
+.header-wrapper .btn-dark {
     background: #333;
     color: #fff;
     border: 1px solid #333;
 }
 
-.btn-outline-dark {
+.header-wrapper .btn-outline-dark {
     background: transparent;
     color: #333;
     border: 1px solid #333;
 }
 
-.btn-hover-primary:hover {
+.header-wrapper .btn-hover-primary:hover {
     background: #F8796C;
     border-color: #F8796C;
 }
 
 /* Mobile Responsive */
 @media (max-width: 575px) {
-    .offcanvas {
+    .header-wrapper .offcanvas {
         width: 300px;
     }
 }
 
-/* Body when offcanvas is open */
-body.offcanvas-open {
+/* Body when offcanvas is open - thêm class cho body */
+body.header-offcanvas-open {
     overflow: hidden;
     padding-right: 17px;
 }
 
 /* Header hover effects */
-.header-tools > div {
+.header-wrapper .header-tools > div {
     transition: transform 0.3s ease;
 }
 
-.header-tools > div:hover {
+.header-wrapper .header-tools > div:hover {
     transform: translateY(-3px);
 }
 
 /* Menu transitions */
-.site-main-menu .sub-menu,
-.site-main-menu .mega-menu {
+.header-wrapper .site-main-menu .sub-menu,
+.header-wrapper .site-main-menu .mega-menu {
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
     transform: translateY(10px);
 }
 
-.site-main-menu li:hover > .sub-menu,
-.site-main-menu li:hover > .mega-menu {
+.header-wrapper .site-main-menu li:hover > .sub-menu,
+.header-wrapper .site-main-menu li:hover > .mega-menu {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
 }
 
 /* Sticky header animation */
-.sticky-header {
+.header-wrapper .sticky-header {
     transform: translateY(-100%);
     transition: transform 0.4s ease;
 }
 
-.sticky-header.is-sticky {
+.header-wrapper .sticky-header.is-sticky {
     transform: translateY(0);
 }
 
 /* Mobile menu toggle animation */
-.mobile-menu-toggle svg {
+.header-wrapper .mobile-menu-toggle svg {
     transition: all 0.3s ease;
 }
 
-.mobile-menu-toggle:hover svg {
+.header-wrapper .mobile-menu-toggle:hover svg {
     transform: scale(1.1);
 }
 
 /* Mobile menu animation for paths */
-.mobile-menu-toggle svg .top,
-.mobile-menu-toggle svg .middle,
-.mobile-menu-toggle svg .bottom {
+.header-wrapper .mobile-menu-toggle svg .top,
+.header-wrapper .mobile-menu-toggle svg .middle,
+.header-wrapper .mobile-menu-toggle svg .bottom {
     transition: all 0.3s ease;
 }
 
 /* Custom scrollbar for offcanvas */
-.customScroll::-webkit-scrollbar {
+.header-wrapper .customScroll::-webkit-scrollbar {
     width: 5px;
 }
 
-.customScroll::-webkit-scrollbar-track {
+.header-wrapper .customScroll::-webkit-scrollbar-track {
     background: #f1f1f1;
 }
 
-.customScroll::-webkit-scrollbar-thumb {
+.header-wrapper .customScroll::-webkit-scrollbar-thumb {
     background: #888;
     border-radius: 5px;
 }
 
-.customScroll::-webkit-scrollbar-thumb:hover {
+.header-wrapper .customScroll::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
 
 /* Enhance hover effects */
-.header-login a,
-.header-search a,
-.header-wishlist a,
-.header-cart a,
-.mobile-menu-toggle a {
+.header-wrapper .header-login a,
+.header-wrapper .header-search a,
+.header-wrapper .header-wishlist a,
+.header-wrapper .header-cart a,
+.header-wrapper .mobile-menu-toggle a {
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
 }
 
-.header-login a:hover,
-.header-search a:hover,
-.header-wishlist a:hover,
-.header-cart a:hover,
-.mobile-menu-toggle a:hover {
+.header-wrapper .header-login a:hover,
+.header-wrapper .header-search a:hover,
+.header-wrapper .header-wishlist a:hover,
+.header-wrapper .header-cart a:hover,
+.header-wrapper .mobile-menu-toggle a:hover {
     transform: translateY(-3px);
     color: #F8796C;
 }
 
 /* Enhance the wishlist and cart badges */
-.wishlist-count,
-.cart-count {
+.header-wrapper .wishlist-count,
+.header-wrapper .cart-count {
     position: absolute;
-    top: -8px;
-    right: -8px;
+
     min-width: 18px;
     height: 18px;
     line-height: 18px;
@@ -377,29 +381,29 @@ body.offcanvas-open {
     transition: transform 0.3s ease;
 }
 
-.header-wishlist:hover .wishlist-count,
-.header-cart:hover .cart-count {
+.header-wrapper .header-wishlist:hover .wishlist-count,
+.header-wrapper .header-cart:hover .cart-count {
     transform: scale(1);
 }
 
 /* Add transition for SVG paths in mobile toggle */
-.mobile-menu-toggle svg path {
+.header-wrapper .mobile-menu-toggle svg path {
     transition: all 0.3s ease;
 }
 
 /* Improved scrollbar for better UX */
-.customScroll {
+.header-wrapper .customScroll {
     scrollbar-width: thin;
     scrollbar-color: #888 #f1f1f1;
 }
 
 /* Main menu hover effects */
-.site-main-menu ul > li > a {
+.header-wrapper .site-main-menu ul > li > a {
     position: relative;
     transition: color 0.3s ease;
 }
 
-.site-main-menu ul > li > a::after {
+.header-wrapper .site-main-menu ul > li > a::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -410,66 +414,74 @@ body.offcanvas-open {
     transition: width 0.3s ease;
 }
 
-.site-main-menu ul > li > a:hover::after {
+.header-wrapper .site-main-menu ul > li > a:hover::after {
     width: 100%;
 }
 
 /* Image hover effects in mega menu */
-.mmh_img {
+.header-wrapper .mmh_img {
     transition: transform 0.5s ease;
 }
 
-.mmh_img:hover {
+.header-wrapper .mmh_img:hover {
     transform: scale(1.05);
 }
 
 /* Ripple effect for better feedback */
-.ripple-effect {
+.header-wrapper .ripple-effect {
     position: absolute;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.4);
     transform: scale(0);
-    animation: ripple-animation 0.6s linear;
+    animation: header-ripple-animation 0.6s linear;
     pointer-events: none;
     z-index: 10;
 }
 
-@keyframes ripple-animation {
+@keyframes header-ripple-animation {
     to {
         transform: scale(4);
         opacity: 0;
     }
 }
 
-.offcanvas-toggle {
+.header-wrapper .offcanvas-toggle {
     position: relative;
     overflow: hidden;
 }
 
 /* Enhance header tools positions */
-.header-login, 
-.header-search, 
-.header-wishlist, 
-.header-cart,
-.mobile-menu-toggle {
+.header-wrapper .header-login, 
+.header-wrapper .header-search, 
+.header-wrapper .header-wishlist, 
+.header-wrapper .header-cart,
+.header-wrapper .mobile-menu-toggle {
     position: relative;
     margin: 0 10px;
 }
 
 /* Offcanvas open transition */
-.offcanvas {
+.header-wrapper .offcanvas {
     will-change: transform;
 }
 
-.offcanvas-open {
-    animation: offcanvas-in 0.4s forwards cubic-bezier(0.645, 0.045, 0.355, 1);
+.header-wrapper .offcanvas-open {
+    animation: header-offcanvas-in 0.4s forwards cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
+@keyframes header-offcanvas-in {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
 
 /* Mobile menu toggle animation */
-.mobile-menu-toggle svg .top,
-.mobile-menu-toggle svg .middle,
-.mobile-menu-toggle svg .bottom {
+.header-wrapper .mobile-menu-toggle svg .top,
+.header-wrapper .mobile-menu-toggle svg .middle,
+.header-wrapper .mobile-menu-toggle svg .bottom {
     transition: stroke-dashoffset 0.5s cubic-bezier(0.25, -0.25, 0.75, 1.25),
                 stroke-dasharray 0.5s cubic-bezier(0.25, -0.25, 0.75, 1.25);
     fill: none;
@@ -479,34 +491,63 @@ body.offcanvas-open {
     stroke-dashoffset: 0;
 }
 
-.mobile-menu-toggle svg .top,
-.mobile-menu-toggle svg .bottom {
+.header-wrapper .mobile-menu-toggle svg .top,
+.header-wrapper .mobile-menu-toggle svg .bottom {
     stroke-dasharray: 240px 950px;
 }
 
-.mobile-menu-toggle svg .middle {
+.header-wrapper .mobile-menu-toggle svg .middle {
     stroke-dasharray: 240px 240px;
 }
 
-.mobile-menu-toggle.active svg .top,
-.mobile-menu-toggle.active svg .bottom {
+.header-wrapper .mobile-menu-toggle.active svg .top,
+.header-wrapper .mobile-menu-toggle.active svg .bottom {
     stroke-dashoffset: -650px;
 }
 
-.mobile-menu-toggle.active svg .middle {
+.header-wrapper .mobile-menu-toggle.active svg .middle {
     stroke-dashoffset: -115px;
     stroke-dasharray: 1px 220px;
 }
 
 /* Đảm bảo header không bị ảnh hưởng bởi padding-right của body */
-.header-section,
-.sticky-header,
-.mobile-header {
+.header-wrapper .header-section,
+.header-wrapper .sticky-header,
+.header-wrapper .mobile-header {
     transition: none !important;
 }
 
-body.offcanvas-open .header-section,
-body.offcanvas-open .sticky-header.is-sticky,
-body.offcanvas-open .mobile-header.sticky-header.is-sticky {
+body.header-offcanvas-open .header-wrapper .header-section,
+body.header-offcanvas-open .header-wrapper .sticky-header.is-sticky,
+body.header-offcanvas-open .header-wrapper .mobile-header.sticky-header.is-sticky {
     padding-right: 17px;
-} 
+}
+
+/* Căn chỉnh offcanvas search */
+.header-wrapper .offcanvas.offcanvas-search {
+    width: 800px; /* Tăng chiều rộng */
+    right: -600px; /* Vị trí ban đầu ngoài màn hình */
+    max-width: 90vw; /* Đảm bảo không vượt quá 90% chiều rộng màn hình */
+}
+
+/* Khi offcanvas search mở, đặt vị trí tốt hơn */
+.header-wrapper .offcanvas.offcanvas-search.offcanvas-open {
+    right: 0;
+}
+
+/* Cải thiện giao diện search form */
+.header-wrapper .offcanvas-search .inner {
+    padding: 40px;
+}
+
+.header-wrapper .offcanvas-search-form input {
+    height: 50px;
+    font-size: 16px;
+}
+
+.header-wrapper .offcanvas-search-form select {
+    height: 50px;
+    font-size: 16px;
+}
+
+/* Responsive cho search off 
