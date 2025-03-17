@@ -19,6 +19,7 @@ export const fetchAccount = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.fetchProfile();
+      console.log("fetch", response);
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -44,10 +45,19 @@ export const accountSlice = createSlice({
         state.userProfile = action.payload;
       },
       doLogoutAction: (state) => {
-        webSocketService.disconnectAll();
+        
         state.isAuthenticated = false;
-        state.userProfile = null;
+        state.userProfile = {
+          id: "",
+          fullName: "",
+          email: "",
+          phoneNumber: "",
+          avatarUrl: "",
+          role: ""
+        };
+        
         localStorage.removeItem('token');
+
       },
     },
     extraReducers: (builder) => {

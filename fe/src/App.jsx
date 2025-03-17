@@ -9,8 +9,11 @@ import Header from "./components/header";
 import Footer from "./components/footer";
 import Home from "./pages/home";
 import LoginRegister from "./pages/loginregister";
+import ProductManagement from "./pages/productmanage";
 import Error404 from "./components/error404";
 import Loading from "./components/loading";
+import AuthProvider from "./components/AuthProvider";
+
 export default function App() {
   const dispatch = useDispatch();
   const isLoading = useSelector(state => state.account.isLoading);
@@ -36,7 +39,7 @@ export default function App() {
 
       children: [
         {index: true, element: <LoginRegister />},
-      ]
+      ],
     },
     {
       path: "/",
@@ -44,14 +47,22 @@ export default function App() {
       children: [
         {index: true, element: <Home />},
       ]
+    },
+    {
+      path: "/admin/product",
+      element: <Layout />,
+      errorElement: <Error404 />,
+      children: [
+        {index: true, element: <ProductManagement />},
+      ]
     }
   ]);
 
   return (
-    <>
+    <AuthProvider>
       {!isLoading || 
         window.location.pathname === "/sign-in" ? 
         <RouterProvider router={router} /> : <Loading />}
-    </>
+    </AuthProvider>
   );
 }

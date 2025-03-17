@@ -2,7 +2,6 @@ package com.julytus.DropShop.exception;
 
 import java.net.URI;
 import java.time.Instant;
-import java.util.EnumMap;
 import java.util.List;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -23,15 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 @Slf4j
 public class GlobalHandlingException {
-    private static final EnumMap<JwtExceptionType, ErrorCode> JWT_ERROR_MAPPING;
-
-    static {
-        JWT_ERROR_MAPPING = new EnumMap<>(JwtExceptionType.class);
-        JWT_ERROR_MAPPING.put(JwtExceptionType.EXPIRED, ErrorCode.JWT_EXPIRED);
-        JWT_ERROR_MAPPING.put(JwtExceptionType.MALFORMED, ErrorCode.JWT_MALFORMED);
-        JWT_ERROR_MAPPING.put(JwtExceptionType.SIGNATURE, ErrorCode.JWT_SIGNATURE_INVALID);
-        JWT_ERROR_MAPPING.put(JwtExceptionType.UNSUPPORTED, ErrorCode.JWT_UNSUPPORTED);
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
@@ -92,41 +82,5 @@ public class GlobalHandlingException {
                 .build();
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGlobalException(
-            Exception exception, HttpServletRequest request) {
-
-        log.error("Handling exception: ", exception);
-
-        ErrorCode errorCode = getErrorCode(exception);
-        return buildErrorResponse(errorCode, request);
-    }
-
-    private ErrorCode getErrorCode(Exception exception) {
-        String exceptionName = exception.getClass().getSimpleName();
-
-        try {
-            JwtExceptionType jwtExceptionType = JwtExceptionType.valueOf(
-                    exceptionName.replace("Exception", "").toUpperCase()
-            );
-            return JWT_ERROR_MAPPING.getOrDefault(jwtExceptionType, ErrorCode.UNAUTHORIZED);
-        } catch (IllegalArgumentException e) {
-            return ErrorCode.UNAUTHORIZED;
-        }
-    }
-
-    private ResponseEntity<ErrorResponse> buildErrorResponse(
-            ErrorCode errorCode, HttpServletRequest request) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .timestamp(Instant.now())
-                .status(errorCode.getCode())
-                .error(errorCode.getMessage())
-                .path(request.getRequestURI())
-                .build();
-
-        return ResponseEntity.status(errorCode.getHttpStatus())
-                .body(errorResponse);
     }
 }

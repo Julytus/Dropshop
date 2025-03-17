@@ -25,8 +25,8 @@ public class MinIoConfig {
     @Value("${minio.avatar-bucket}")
     private String avatarBucket;
 
-    @Value("${minio.book-bucket}")
-    private String bookBucket;
+    @Value("${minio.product-bucket}")
+    private String productBucket;
 
     @Bean
     public MinioClient minioClient() {
@@ -41,8 +41,8 @@ public class MinIoConfig {
             setPublicPolicy(minioClient, avatarBucket);
 
             // Tạo và set policy cho cover image bucket
-            createBucketIfNotExists(minioClient, bookBucket);
-            setPublicPolicy(minioClient, bookBucket);
+            createBucketIfNotExists(minioClient, productBucket);
+            setPublicPolicy(minioClient, productBucket);
         } catch (Exception e) {
             log.error("Error initializing MinIO buckets: {}", e.getMessage());
         }
@@ -58,19 +58,17 @@ public class MinIoConfig {
     }
 
     private void setPublicPolicy(MinioClient minioClient, String bucket) throws Exception {
-        String policy = String.format("""
-            {
-                "Version": "2017d-10-17",
-                "Statement": [
-                    {
-                        "Effect": "Allow",
-                        "Principal": {"AWS": "*"},
-                        "Action": ["s3:GetObject"],
-                        "Resource": ["arn:aws:s3:::%s/*"]
-                    }
-                ]
-            }
-            """, bucket);
+        String policy = "{"
+                + "\"Version\": \"2012-10-17\","
+                + "\"Statement\": ["
+                + "{"
+                + "\"Effect\": \"Allow\","
+                + "\"Principal\": \"*\","
+                + "\"Action\": [\"s3:GetObject\"],"
+                + "\"Resource\": [\"arn:aws:s3:::" + bucket + "/*\"]"
+                + "}"
+                + "]"
+                + "}";
 
         minioClient.setBucketPolicy(
                 SetBucketPolicyArgs.builder()

@@ -19,9 +19,10 @@ instance.interceptors.request.use(
 );
 
 const handleRefreshToken = async () => {
-    const response = await instance.get('/identity/auth/refresh');
+    const response = await instance.post('/api/v1/auth/refresh-token');
+    console.log("handleRefreshToken", response);
     if(response.data) {
-        return response.data.data.token;
+        return response.data.data.access_token;
     }
     else return null;
 }
@@ -48,7 +49,7 @@ instance.interceptors.response.use(
             }
             else {
                 localStorage.removeItem('token');
-                window.location.href = '/login';
+                window.location.href = '/sign-in';
             }
         }
         return Promise.reject(error);
