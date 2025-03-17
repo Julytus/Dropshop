@@ -31,8 +31,11 @@ public class ProductDetail extends AbstractEntity<String> {
     @ManyToOne
     Size size;
 
-    @Column(name = "price")
-    Float price;
+    @Column(name = "description")
+    String description;
+
+    @Column(name = "star")
+    Float star;
 
     @Column(name = "stock_quantity")
     Integer stockQuantity;

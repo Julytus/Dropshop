@@ -27,8 +27,8 @@ public class FileProcessorImpl implements FileProcessor {
     @Value("${minio.avatar-bucket}")
     private String avatarBucket;
 
-    @Value("${minio.book-bucket}")
-    private String bookBucket;
+    @Value("${minio.product-bucket}")
+    private String productBucket;
 
     @Value("${minio.url}")
     private String minioUrl;
@@ -42,15 +42,15 @@ public class FileProcessorImpl implements FileProcessor {
     }
 
     @Override
-    public String uploadCoverImage(MultipartFile file, String title) {
-        String fileName =title + "/" + StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()))
+    public String uploadPrimaryImage(MultipartFile file, String nameProduct) {
+        String fileName = nameProduct + "/" + StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()))
                 + "_" + UUID.randomUUID();
 
-        return uploadImageToMinio(file, bookBucket, fileName);
+        return uploadImageToMinio(file, productBucket, fileName);
     }
 
     @Override
-    public String uploadChapter(List<MultipartFile> files, String bookName) {
+    public String uploadThumbnail(List<MultipartFile> files, String bookName) {
         return "";
     }
 
@@ -83,7 +83,7 @@ public class FileProcessorImpl implements FileProcessor {
 
                 minioClient.putObject(
                         PutObjectArgs.builder()
-                                .bucket(bookBucket)
+                                .bucket(productBucket)
                                 .object(fileName)
                                 .stream(file.getInputStream(), file.getSize(), -1)
                                 .contentType(file.getContentType())
@@ -91,7 +91,7 @@ public class FileProcessorImpl implements FileProcessor {
                 );
             }
             // Trả về URL public
-            return String.format("%s/%s/%s", minioUrl, bookBucket, bookTitle);
+            return String.format("%s/%s/%s", minioUrl, productBucket, bookTitle);
         } catch (Exception e) {
             throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
         }

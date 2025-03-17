@@ -19,6 +19,7 @@ export const fetchAccount = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.fetchProfile();
+      console.log("fetch", response);
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {

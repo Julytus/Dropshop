@@ -27,8 +27,8 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
     private final JwtDecoderCustomizer decoder;
     private static final String[] WHITELIST = {
+            "/api/v1/product/**",
             "/api/v1/auth/**",
-            "/api/v1/users-creation",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/webjars/swagger-ui/**",

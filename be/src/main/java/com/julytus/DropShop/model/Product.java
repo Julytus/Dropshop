@@ -23,14 +23,8 @@ public class Product extends AbstractEntity<String> {
     @ManyToOne
     Category category;
 
-    @Column(name = "description")
-    String description;
-
     @Column(name = "image_url")
     String imageUrl;
-
-    @Column(name = "star")
-    Float star;
 
     @Column(name = "price")
     Float price;
