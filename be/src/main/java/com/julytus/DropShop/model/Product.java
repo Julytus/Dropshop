@@ -29,6 +29,6 @@ public class Product extends AbstractEntity<String> {
     @Column(name = "price")
     Float price;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    Set<ProductDetail> productDetails = new HashSet<>();
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
+    ProductDetail productDetails;
 }

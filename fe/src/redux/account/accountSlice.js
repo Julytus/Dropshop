@@ -49,10 +49,10 @@ export const accountSlice = createSlice({
         state.isAuthenticated = false;
         state.userProfile = {
           id: "",
-          fullName: "",
+          full_name: "",
           email: "",
-          phoneNumber: "",
-          avatarUrl: "",
+          phone_number: "",
+          avatar_url: "",
           role: ""
         };
         

@@ -69,4 +69,12 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         productRepository.delete(product);
     }
+
+    @Override
+    public ProductResponse getProduct(String id) {
+        return ProductResponseMapper.fromProduct(
+                productRepository.findById(id)
+                        .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND))
+        );
+    }
 }

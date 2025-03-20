@@ -14,6 +14,8 @@ public enum ErrorCode {
     ACCESS_DINED(403, "Access denied", HttpStatus.FORBIDDEN),
     TOKEN_INVALID(400, "Token invalid", HttpStatus.BAD_REQUEST),
     CATEGORY_NOT_FOUND(404, "Category not found", HttpStatus.NOT_FOUND),
+    COLOR_NOT_FOUND(404, "Color not found", HttpStatus.NOT_FOUND),
+    SIZE_NOT_FOUND(404, "Size not found", HttpStatus.NOT_FOUND),
     NAME_EXISTED(404, "Name existed", HttpStatus.BAD_REQUEST),
     PRODUCT_NOT_FOUND(404, "Product not found", HttpStatus.NOT_FOUND),
     ROLE_EXISTED(400, "PredefinedRole existed", HttpStatus.BAD_REQUEST),

@@ -12,11 +12,13 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @Builder
 public class UserResponse {
+    @JsonProperty("id")
     String id;
 
     @JsonProperty("full_name")
     String fullName;
 
+    @JsonProperty("email")
     String email;
 
     @JsonProperty("phone_number")

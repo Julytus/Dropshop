@@ -5,7 +5,6 @@ import com.julytus.DropShop.dto.response.PageResponse;
 import com.julytus.DropShop.dto.response.ProductResponse;
 import com.julytus.DropShop.dto.response.ResponseData;
 import com.julytus.DropShop.service.ProductService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -48,6 +47,16 @@ public class ProductController {
         return ResponseData.<Void>builder()
                 .code(HttpStatus.OK.value())
                 .message("Delete product successfully.")
+                .build();
+    }
+
+    @GetMapping("/product/{id}")
+    ResponseData<ProductResponse> getProductById(@PathVariable String id) {
+        var result = productService.getProduct(id);
+        return ResponseData.<ProductResponse>builder()
+                .code(HttpStatus.OK.value())
+                .message("get product's info successfully.")
+                .data(result)
                 .build();
     }
 }

@@ -2,13 +2,14 @@ package com.julytus.DropShop.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "colors")
@@ -21,7 +22,4 @@ import java.util.Set;
 public class Color extends AbstractEntity<String> {
     @Column(name = "name")
     String name;
-
-    @OneToMany(mappedBy = "color")
-    Set<ProductDetail> productDetails = new HashSet<>();
-}
+} 

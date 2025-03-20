@@ -17,28 +17,33 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductDetail extends AbstractEntity<String> {
     @JoinColumn(name = "product_id")
-    @ManyToOne
+    @OneToOne
     Product product;
 
     @Column(name = "thumbnail_path")
     String thumbnailPath;
 
-    @JoinColumn(name = "color_id")
-    @ManyToOne
-    Color color;
+    @ManyToMany
+    @JoinTable(
+        name = "product_detail_colors",
+        joinColumns = @JoinColumn(name = "product_detail_id"),
+        inverseJoinColumns = @JoinColumn(name = "color_id")
+    )
+    Set<Color> colors = new HashSet<>();
 
-    @JoinColumn(name = "size_id")
-    @ManyToOne
-    Size size;
+    @ManyToMany
+    @JoinTable(
+        name = "product_detail_sizes",
+        joinColumns = @JoinColumn(name = "product_detail_id"),
+        inverseJoinColumns = @JoinColumn(name = "size_id")
+    )
+    Set<Size> sizes = new HashSet<>();
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
     String description;
 
     @Column(name = "star")
     Float star;
-
-    @Column(name = "stock_quantity")
-    Integer stockQuantity;
 
     @Column(name = "sold_quantity")
     Integer soldQuantity;

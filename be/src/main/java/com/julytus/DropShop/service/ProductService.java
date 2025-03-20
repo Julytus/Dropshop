@@ -13,4 +13,6 @@ public interface ProductService {
     ProductResponse updateProduct(String id, ProductRequest request);
 
     void deleteProductById(String id);
+
+    ProductResponse getProduct(String id);
 }

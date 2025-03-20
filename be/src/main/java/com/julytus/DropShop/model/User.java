@@ -21,7 +21,8 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(indexes = {
+@Table(name = "users"
+        , indexes = {
         @Index(name = "idx_user_email", columnList = "email", unique = true)
 })
 @Builder

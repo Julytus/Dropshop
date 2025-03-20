@@ -31,6 +31,21 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public CategoryResponse updateCategory(CategoryRequest request, String id) {
+        Category category = getById(id);
+        category.setName(request.getName());
+        return CategoryResponseMapper.fromCategory(
+                categoryRepository.save(category)
+        );
+    }
+
+    @Override
+    public void deleteCategory(String id) {
+        Category category = getById(id);
+        categoryRepository.delete(category);
+    }
+
+    @Override
     public Category getById(String id) {
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));

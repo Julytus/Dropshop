@@ -54,7 +54,7 @@ const Header = () => {
                     <div className="row align-items-center">
                         <div className="col-auto">
                             <div className="header-logo">
-                                <Link to="/"><img src="/assets/images/logo/logo-2.webp" alt="Learts Logo" /></Link>
+                                <Link to="/"><img src="/assets/images/logo/logo-2.webp" alt="Shop Logo" /></Link>
                             </div>
                         </div>
                         <div className="col-auto me-auto">

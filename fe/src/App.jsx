@@ -10,6 +10,8 @@ import Footer from "./components/footer";
 import Home from "./pages/home";
 import LoginRegister from "./pages/loginregister";
 import ProductManagement from "./pages/productmanage";
+import MyAccount from "./pages/myaccount";
+import ProductDetail from "./pages/productdetail";
 import Error404 from "./components/error404";
 import Loading from "./components/loading";
 import AuthProvider from "./components/AuthProvider";
@@ -49,11 +51,27 @@ export default function App() {
       ]
     },
     {
+      path: "/product-details/:id",
+      element: <Layout />,
+      errorElement: <Error404 />,
+      children: [
+        {index: true, element: <ProductDetail />},
+      ]
+    },
+    {
       path: "/admin/product",
       element: <Layout />,
       errorElement: <Error404 />,
       children: [
         {index: true, element: <ProductManagement />},
+      ]
+    },
+    {
+      path: "/my-account",
+      element: <Layout />,
+      errorElement: <Error404 />,
+      children: [
+        {index: true, element: <MyAccount />},
       ]
     }
   ]);
