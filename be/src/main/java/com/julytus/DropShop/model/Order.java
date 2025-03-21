@@ -20,19 +20,25 @@ public class Order extends AbstractEntity<String> {
     @ManyToOne
     User user;
 
-    @JoinColumn(name = "address_id")
-    @OneToOne
-    Address address;
-
-    @Column(name = "title")
-    String title;
-
     @Column(name = "total_price")
-    Integer totalPrice;
+    Float totalPrice;
 
     @Column(name = "status")
     String status;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    Set<OrderDetail> orderDetails = new HashSet<>();
+    @Column(name = "email_address")
+    String emailAddress;
+
+    @Column(name = "phoneNumber")
+    String phoneNumber;
+
+    @Column(name = "order_notes", columnDefinition = "TEXT")
+    String orderNotes;
+
+    @JoinColumn(name = "address_id")
+    @OneToOne
+    Address address;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<OrderItem> items = new HashSet<>();
 }

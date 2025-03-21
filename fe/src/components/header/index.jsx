@@ -6,7 +6,6 @@ import './header.css';
 import MainMenu from './MainMenu';
 import HeaderTools from './HeaderTools';
 import OffcanvasSearch from './OffcanvasSearch';
-import OffcanvasWishlist from './OffcanvasWishlist';
 import OffcanvasCart from './OffcanvasCart';
 import OffcanvasMobileMenu from './OffcanvasMobileMenu';
 
@@ -54,7 +53,7 @@ const Header = () => {
                     <div className="row align-items-center">
                         <div className="col-auto">
                             <div className="header-logo">
-                                <Link to="/"><img src="/assets/images/logo/logo-2.webp" alt="Learts Logo" /></Link>
+                                <Link to="/"><img src="/assets/images/logo/logo-2.webp" alt="Shop Logo" /></Link>
                             </div>
                         </div>
                         <div className="col-auto me-auto">
@@ -120,7 +119,6 @@ const Header = () => {
 
             {/* Offcanvas Components */}
             <OffcanvasSearch isOpen={activeOffcanvas === 'search'} onClose={handleOffcanvasClose} />
-            <OffcanvasWishlist isOpen={activeOffcanvas === 'wishlist'} onClose={handleOffcanvasClose} />
             <OffcanvasCart isOpen={activeOffcanvas === 'cart'} onClose={handleOffcanvasClose} />
             <OffcanvasMobileMenu isOpen={activeOffcanvas === 'mobile-menu'} onClose={handleOffcanvasClose} />
 

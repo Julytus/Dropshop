@@ -12,21 +12,21 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderDetail extends AbstractEntity<String> {
+public class OrderItem extends AbstractEntity<String> {
     @JoinColumn(name = "order_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     Order order;
 
-    @JoinColumn(name = "product_detail_id")
-    @ManyToOne
-    ProductDetail productDetail;
+    @JoinColumn(name = "product_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    Product product;
 
     @Column(name = "quantity")
     Integer quantity;
 
-    @Column(name = "price")
-    Integer price;
+    @Column(name = "size")
+    String size;
 
-    @Column(name = "status")
-    String status;
+    @Column(name = "color")
+    String color;
 }

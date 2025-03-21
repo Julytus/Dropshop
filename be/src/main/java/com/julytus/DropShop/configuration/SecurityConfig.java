@@ -28,7 +28,9 @@ public class SecurityConfig {
     private final JwtDecoderCustomizer decoder;
     private static final String[] WHITELIST = {
             "/api/v1/product/**",
+            "/api/v1/product-detail/**",
             "/api/v1/auth/**",
+            "/api/v1/order/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/webjars/swagger-ui/**",

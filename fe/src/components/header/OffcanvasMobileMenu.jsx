@@ -71,9 +71,6 @@ const OffcanvasMobileMenu = React.memo(({ isOpen, onClose }) => {
                         <div className="header-login">
                             <a href="my-account.html" onClick={handleLinkClick}><i className="far fa-user"></i></a>
                         </div>
-                        <div className="header-wishlist">
-                            <a href="wishlist.html" onClick={handleLinkClick}><span>3</span><i className="far fa-heart"></i></a>
-                        </div>
                         <div className="header-cart">
                             <a href="shopping-cart.html" onClick={handleLinkClick}><span className="cart-count">3</span><i className="fas fa-shopping-cart"></i></a>
                         </div>

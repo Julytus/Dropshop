@@ -30,9 +30,12 @@ export const callLogin = async ({ email, password }) => {
 
 export const callLogout = async () => {
     try {
-        const response = await axios.post('/api/v1/auth/logout', {}, {
+        const token = localStorage.getItem('token');
+        const response = await axios.post('/api/v1/auth/logout', {
+            accessToken: token
+        }, {
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${token}`
             }
         });
         return response;
@@ -75,7 +78,8 @@ export const createProduct = async (productData, primaryImage) => {
 
         const response = await axios.post('/api/v1/product', formData, {
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'multipart/form-data'
             }
         });
         return response.data;
@@ -135,3 +139,202 @@ export const deleteProduct = async (productId) => {
         throw error;
     }
 }
+
+export const createProductDetail = async (productId, productDetailData) => {
+    try {
+        console.log("Creating product detail for productId:", productId, productDetailData);
+        
+        // Create FormData object to send both files and data
+        const formData = new FormData();
+        
+        // Add array data for colorIds and sizeIds
+        if (productDetailData.colorIds && productDetailData.colorIds.length > 0) {
+            productDetailData.colorIds.forEach(colorId => {
+                formData.append('colorIds', colorId);
+            });
+        }
+        
+        if (productDetailData.sizeIds && productDetailData.sizeIds.length > 0) {
+            productDetailData.sizeIds.forEach(sizeId => {
+                formData.append('sizeIds', sizeId);
+            });
+        }
+        
+        // Add description
+        if (productDetailData.description) {
+            formData.append('description', productDetailData.description);
+        }
+        
+        // Add thumbnail images if provided
+        if (productDetailData.thumbnails && productDetailData.thumbnails.length > 0) {
+            productDetailData.thumbnails.forEach(thumbnail => {
+                formData.append('thumbnails', thumbnail);
+            });
+        }
+        
+        // Log data before sending to check
+        console.log("ProductDetail FormData content:");
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
+
+        const response = await axios.post(`/api/v1/product-detail/${productId}`, formData, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('API createProductDetail, Error:', error);
+        // Display additional error details from server if available
+        if (error.response) {
+            console.error('Server response:', error.response.data);
+            console.error('Status code:', error.response.status);
+        }
+        throw error;
+    }
+}
+
+export const fetchProductDetail = async (productId) => {
+    try {
+        const response = await axios.get(`/api/v1/product-detail/${productId}`);
+        return response.data;
+    } catch (error) {
+        console.error('API fetchProductDetail, Error:', error);
+        // Display additional error details from server if available
+        if (error.response) {
+            console.error('Server response:', error.response.data);
+            console.error('Status code:', error.response.status);
+        }
+        throw error;
+    }
+}
+
+export const updateProductDetail = async (productId, productDetailData) => {
+    try {
+        console.log("Updating product detail for productId:", productId, productDetailData);
+        
+        // Create FormData object to send both files and data
+        const formData = new FormData();
+        
+        // Add array data for colorIds and sizeIds
+        if (productDetailData.colorIds && productDetailData.colorIds.length > 0) {
+            productDetailData.colorIds.forEach(colorId => {
+                formData.append('colorIds', colorId);
+            });
+        }
+        
+        if (productDetailData.sizeIds && productDetailData.sizeIds.length > 0) {
+            productDetailData.sizeIds.forEach(sizeId => {
+                formData.append('sizeIds', sizeId);
+            });
+        }
+        
+        // Add description
+        if (productDetailData.description) {
+            formData.append('description', productDetailData.description);
+        }
+        
+        // Add new thumbnail images if provided
+        if (productDetailData.thumbnails && productDetailData.thumbnails.length > 0) {
+            productDetailData.thumbnails.forEach(thumbnail => {
+                formData.append('thumbnails', thumbnail);
+            });
+        }
+        
+        // Log data before sending to check
+        console.log("ProductDetail Update FormData content:");
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
+
+        const response = await axios.put(`/api/v1/product-detail/${productId}`, formData, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('API updateProductDetail, Error:', error);
+        // Display additional error details from server if available
+        if (error.response) {
+            console.error('Server response:', error.response.data);
+            console.error('Status code:', error.response.status);
+        }
+        throw error;
+    }
+}
+
+export const getAllProducts = async (page = 1, limit = 8) => {
+    try {
+        const response = await axios.get('/api/v1/product', {
+            params: {
+                page,
+                limit
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('API getAllProducts, Error:', error);
+        throw error;
+    }
+}
+
+export const getProductById = async (productId) => {
+    try {
+        const response = await axios.get(`/api/v1/product/${productId}`);
+        return response.data;
+    } catch (error) {
+        console.error('API getProductById, Error:', error);
+        if (error.response) {
+            console.error('Server response:', error.response.data);
+            console.error('Status code:', error.response.status);
+        }
+        throw error;
+    }
+}
+
+//Order
+export const createOrder = async (orderData) => {
+    try {
+        const response = await axios.post('/api/v1/order', orderData);
+        return response.data;
+    } catch (error) {
+        console.error('API createOrder, Error:', error);
+        throw error;
+    }
+};
+
+export const getMyOrders = async (page = 1, limit = 10) => {
+    try {
+        const response = await axios.get('/api/v1/order', {
+            params: {
+                page,
+                limit
+            },
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('API getMyOrders, Error:', error);
+        throw error;
+    }
+};
+
+export const getOrderDetail = async (orderId) => {
+    try {
+        const response = await axios.get(`/api/v1/order/${orderId}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('API getOrderDetail, Error:', error);
+        throw error;
+    }
+}; 

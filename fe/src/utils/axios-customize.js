@@ -1,59 +1,119 @@
 import axios from 'axios';
+import { store } from '../redux/store';
+import { doLogoutAction } from '../redux/account/accountSlice';
+import { toast } from 'react-toastify';
 
-const baseURL = "http://localhost:8088";
 const instance = axios.create({
-    baseURL: baseURL,
-    withCredentials: true
+    baseURL: 'http://localhost:8088',
+    headers: {
+        'Content-Type': 'application/json'
+    }
 });
 
-// You can add interceptors if needed
-instance.interceptors.request.use(
-    config => {
-        // Do something before request is sent
-        return config;
-    },
-    error => {
-        // Do something with request error
-        return Promise.reject(error);
-    }
-);
+// Flag để kiểm tra xem đang refresh token hay không
+let isRefreshing = false;
+// Mảng chứa các request đang chờ refresh token
+let failedQueue = [];
+
+const processQueue = (error = null) => {
+    failedQueue.forEach(prom => {
+        if (error) {
+            prom.reject(error);
+        } else {
+            prom.resolve();
+        }
+    });
+    failedQueue = [];
+};
 
 const handleRefreshToken = async () => {
-    const response = await instance.post('/api/v1/auth/refresh-token');
-    console.log("handleRefreshToken", response);
-    if(response.data) {
-        return response.data.data.access_token;
-    }
-    else return null;
-}
-
-const NO_RETRY_HEADERS = 'x-no-retry';
-
-instance.interceptors.response.use(
-    response => {
-        // Do something with response data
-        return response;
-    },
-    async error => {
-        // Do something with response error
-        if (error.config 
-            && error.response 
-            && error.response.status === 401 
-            && !error.config.headers[NO_RETRY_HEADERS]) {
-            const newAccessToken = await handleRefreshToken();
-            error.config.headers[NO_RETRY_HEADERS] = true;
-            if(newAccessToken) {
-                error.config.headers['Authorization'] = `Bearer ${newAccessToken}`;
-                localStorage.setItem('token', newAccessToken);
-                return instance.request(error.config);
-            }
-            else {
-                localStorage.removeItem('token');
-                window.location.href = '/sign-in';
-            }
+    try {
+        const refreshToken = localStorage.getItem('refresh_token');
+        if (!refreshToken) {
+            throw new Error('No refresh token available');
         }
-        return Promise.reject(error);
+
+        const response = await instance.post('/api/v1/auth/refresh-token', { refresh_token: refreshToken });
+        
+        if (response.data) {
+            const { access_token, refresh_token } = response.data.data;
+            localStorage.setItem('token', access_token);
+            localStorage.setItem('refresh_token', refresh_token);
+            instance.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+            return access_token;
+        }
+        return null;
+    } catch (error) {
+        console.error('Refresh token failed:', error);
+        // Xóa token và chuyển về trang login
+        localStorage.removeItem('token');
+        localStorage.removeItem('refresh_token');
+        store.dispatch(doLogoutAction());
+        window.location.href = '/sign-in';
+        throw error;
     }
-);
+};
+
+instance.interceptors.request.use(function (config) {
+    // Lấy token từ localStorage
+    const token = localStorage.getItem('token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+}, function (error) {
+    return Promise.reject(error);
+});
+
+instance.interceptors.response.use(function (response) {
+    return response;
+}, async function (error) {
+    const originalRequest = error.config;
+
+    // Nếu lỗi 401 và chưa thử refresh token
+    if (error.response?.status === 401 && !originalRequest._retry) {
+        if (isRefreshing) {
+            // Nếu đang refresh token, thêm request vào hàng đợi
+            return new Promise((resolve, reject) => {
+                failedQueue.push({ resolve, reject });
+            })
+                .then(() => {
+                    return instance(originalRequest);
+                })
+                .catch(err => {
+                    return Promise.reject(err);
+                });
+        }
+
+        originalRequest._retry = true;
+        isRefreshing = true;
+
+        try {
+            const newToken = await handleRefreshToken();
+            if (newToken) {
+                processQueue();
+                return instance(originalRequest);
+            }
+        } catch (refreshError) {
+            processQueue(refreshError);
+            return Promise.reject(refreshError);
+        } finally {
+            isRefreshing = false;
+        }
+    }
+
+    // Xử lý các lỗi khác
+    if (error.response?.status === 403) {
+        toast.error('You do not have permission to access this resource');
+    } else if (error.response?.status === 404) {
+        toast.error('Resource not found');
+    } else if (error.response?.status === 500) {
+        toast.error('Server error occurred');
+    } else {
+        toast.error('An error occurred');
+    }
+
+    return Promise.reject(error);
+});
 
 export default instance;

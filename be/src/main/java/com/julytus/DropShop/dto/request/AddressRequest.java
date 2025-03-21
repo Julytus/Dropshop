@@ -1,12 +1,18 @@
 package com.julytus.DropShop.dto.request;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AddressRequest {
-    private String number;
-    private String street;
-    private String ward;
-    private String district;
-    private String city;
+    String country;
+    String street;
+    String city;
+    String district;
+    String number;
+    String zip;
 }

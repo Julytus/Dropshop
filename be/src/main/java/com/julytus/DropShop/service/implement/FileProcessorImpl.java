@@ -1,5 +1,6 @@
 package com.julytus.DropShop.service.implement;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -13,8 +14,12 @@ import com.julytus.DropShop.exception.AppException;
 import com.julytus.DropShop.exception.ErrorCode;
 import com.julytus.DropShop.service.FileProcessor;
 
+import io.minio.ListObjectsArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
+import io.minio.Result;
+import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,16 +47,16 @@ public class FileProcessorImpl implements FileProcessor {
     }
 
     @Override
-    public String uploadPrimaryImage(MultipartFile file, String nameProduct) {
-        String fileName = nameProduct + "/" + StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()))
+    public String uploadPrimaryImage(MultipartFile file, String name) {
+        String fileName = name + "/" + StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()))
                 + "_" + UUID.randomUUID();
 
         return uploadImageToMinio(file, productBucket, fileName);
     }
 
     @Override
-    public String uploadThumbnail(List<MultipartFile> files, String bookName) {
-        return "";
+    public String uploadThumbnail(List<MultipartFile> files, String productId) {
+        return uploadThumbnailToMinio(files, productId);
     }
 
     private String uploadImageToMinio(MultipartFile file, String bucket, String fileName) {
@@ -73,11 +78,47 @@ public class FileProcessorImpl implements FileProcessor {
             throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
         }
     }
+    @Override
+    public List<String> getAllImageUrls(String folderPath) {
+        List<String> imageUrls = new ArrayList<>();
 
-    private String uploadChapterToMinio(List<MultipartFile> files, String bookTitle) {
+        try {
+            // Trích xuất folder ID từ URL nếu đang là URL đầy đủ
+            String folderId = folderPath;
+            if (folderPath.startsWith(minioUrl)) {
+                // Lấy chỉ folder ID từ URL (phần cuối cùng của URL)
+                String[] parts = folderPath.split("/");
+                folderId = parts[parts.length - 1];
+            }
+
+            // Liệt kê các objects trong bucket với prefix là folder ID
+            Iterable<Result<Item>> results = minioClient.listObjects(
+                    ListObjectsArgs.builder()
+                            .bucket(productBucket)
+                            .prefix(folderId + "/")
+                            .recursive(true)
+                            .build()
+            );
+
+            for (Result<Item> result : results) {
+                Item item = result.get();
+                String filePath = item.objectName();  // Lấy tên file trong bucket
+                String fileUrl = String.format("%s/%s/%s", minioUrl, productBucket, filePath);
+                imageUrls.add(fileUrl);
+            }
+        } catch (Exception e) {
+            log.error("Error listing objects in MinIO: {}", e.getMessage(), e);
+            throw new RuntimeException("Error listing objects in MinIO: " + e.getMessage(), e);
+        }
+
+        return imageUrls;
+    }
+
+    private String uploadThumbnailToMinio(List<MultipartFile> files, String productId) {
         try {
             for (MultipartFile file : files) {
-                String fileName = bookTitle + "/" + file.getOriginalFilename();
+                String fileName = productId + "/" + StringUtils.cleanPath(Objects.requireNonNull(
+                        file.getOriginalFilename())) + "_" + UUID.randomUUID();
 
                 validateImageFile(file);
 
@@ -91,7 +132,7 @@ public class FileProcessorImpl implements FileProcessor {
                 );
             }
             // Trả về URL public
-            return String.format("%s/%s/%s", minioUrl, productBucket, bookTitle);
+            return String.format("%s/%s/%s", minioUrl, productBucket, productId);
         } catch (Exception e) {
             throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
         }
@@ -111,6 +152,48 @@ public class FileProcessorImpl implements FileProcessor {
         }
         if (file.getSize() > 5 * 1024 * 1024) {
             throw new AppException(ErrorCode.FILE_TOO_LARGE);
+        }
+    }
+
+    @Override
+    public void deleteFolder(String folderPath) {
+        try {
+            // Trích xuất folder ID từ URL nếu đang là URL đầy đủ
+            String folderId = folderPath;
+            if (folderPath.startsWith(minioUrl)) {
+                // Lấy chỉ folder ID từ URL (phần cuối cùng của URL)
+                String[] parts = folderPath.split("/");
+                folderId = parts[parts.length - 1];
+            }
+
+            // Liệt kê tất cả các objects trong thư mục
+            Iterable<Result<Item>> results = minioClient.listObjects(
+                    ListObjectsArgs.builder()
+                            .bucket(productBucket)
+                            .prefix(folderId + "/")
+                            .recursive(true)
+                            .build()
+            );
+
+            // Xóa từng object một
+            for (Result<Item> result : results) {
+                Item item = result.get();
+                String objectName = item.objectName();
+                
+                minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                        .bucket(productBucket)
+                        .object(objectName)
+                        .build()
+                );
+                
+                log.info("Deleted object: {}/{}", productBucket, objectName);
+            }
+            
+            log.info("Successfully deleted folder: {}/{}", productBucket, folderId);
+        } catch (Exception e) {
+            log.error("Error deleting folder in MinIO: {}", e.getMessage(), e);
+            throw new RuntimeException("Error deleting folder in MinIO: " + e.getMessage(), e);
         }
     }
 }

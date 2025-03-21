@@ -1,0 +1,149 @@
+/* Checkout Header */
+.checkout-header {
+    background-image: url('/images/bg/checkout-header.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 60px 0;
+    margin-bottom: 50px;
+}
+
+.checkout-header .title {
+    color: #fff;
+    margin-bottom: 0;
+}
+
+.checkout-header .breadcrumb {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+.checkout-header .breadcrumb-item {
+    color: #fff;
+}
+
+.checkout-header .breadcrumb-item a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.checkout-header .breadcrumb-item.active {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Section Title */
+.section-title2 {
+    margin-bottom: 30px;
+}
+
+.section-title2 .title {
+    font-size: 24px;
+    margin-bottom: 0;
+    color: #333;
+}
+
+/* Form Styles */
+.checkout-form label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 500;
+}
+
+.checkout-form .required {
+    color: #e81c24;
+    margin-left: 4px;
+}
+
+.checkout-form input,
+.checkout-form select,
+.checkout-form textarea {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s;
+}
+
+.checkout-form input:focus,
+.checkout-form select:focus,
+.checkout-form textarea:focus {
+    border-color: #333;
+    outline: none;
+}
+
+.checkout-form textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+/* Order Summary */
+.order-summary {
+    background: #f8f8f8;
+    padding: 30px;
+    border-radius: 4px;
+}
+
+.order-summary .table {
+    margin-bottom: 0;
+}
+
+.order-summary th {
+    font-weight: 600;
+    color: #333;
+    border-top: none;
+}
+
+.order-summary td {
+    border-top: 1px solid #eee;
+}
+
+.order-summary tr:last-child th,
+.order-summary tr:last-child td {
+    border-bottom: none;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Payment Methods */
+.payment-methods {
+    background: #f8f8f8;
+    padding: 30px;
+    border-radius: 4px;
+    margin-bottom: 30px;
+}
+
+.form-check {
+    margin-bottom: 15px;
+}
+
+.form-check-input {
+    margin-top: 0.3em;
+}
+
+.form-check-label {
+    margin-left: 8px;
+    color: #333;
+}
+
+/* Place Order Button */
+.place-order .btn {
+    width: 100%;
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+    .checkout-header {
+        padding: 40px 0;
+    }
+    
+    .order-summary,
+    .payment-methods {
+        padding: 20px;
+    }
+} 

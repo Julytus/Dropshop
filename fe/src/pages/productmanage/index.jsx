@@ -1,28 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { createProduct, fetchProducts, deleteProduct } from '../../services/api';
+import { fetchProducts, deleteProduct } from '../../services/api';
 import { toast } from 'react-toastify';
+import AddProductForm from './AddProductForm';
+import EditProductForm from './EditProductForm';
 
 const ProductManagement = () => {
   const [products, setProducts] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   
+  // State for editing
+  const [editingProductId, setEditingProductId] = useState(null);
+  const [editingProduct, setEditingProduct] = useState(null);
+  
   // Ref to prevent multiple API calls
   const apiCalled = useRef(false);
-  
-  // State for new product form
-  const [newProduct, setNewProduct] = useState({
-    name: '',
-    categoryId: '',
-    price: ''
-  });
-  
-  // State for image file
-  const [primaryImage, setPrimaryImage] = useState(null);
-  const [previewImage, setPreviewImage] = useState('');
 
   // Load product list when component mounts
   useEffect(() => {
@@ -99,105 +93,6 @@ const ProductManagement = () => {
     }
   };
 
-  // Handle form input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewProduct({
-      ...newProduct,
-      [name]: value
-    });
-  };
-
-  // Handle image file upload
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Check file format and size
-      const validImageTypes = ['image/jpeg', 'image/png', 'image/webp'];
-      const maxSize = 10 * 1024 * 1024; // 10MB
-      
-      if (!validImageTypes.includes(file.type)) {
-        toast.error('Only JPG, PNG or WebP image formats are accepted');
-        return;
-      }
-      
-      if (file.size > maxSize) {
-        toast.error('File size cannot exceed 10MB');
-        return;
-      }
-      
-      setPrimaryImage(file);
-      
-      // Create preview URL for the image
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Handle form submission for adding a product
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    // Validate form
-    if (!newProduct.name.trim()) {
-      toast.error('Product name cannot be empty');
-      return;
-    }
-    
-    if (!newProduct.categoryId.trim()) {
-      toast.error('Product category cannot be empty');
-      return;
-    }
-    
-    if (!newProduct.price || isNaN(parseFloat(newProduct.price)) || parseFloat(newProduct.price) <= 0) {
-      toast.error('Product price must be a positive number');
-      return;
-    }
-    
-    if (!primaryImage) {
-      toast.error('Please select an image for the product');
-      return;
-    }
-    
-    try {
-      setIsSubmitting(true);
-      
-      // Convert price from string to float
-      const productData = {
-        ...newProduct,
-        price: parseFloat(newProduct.price)
-      };
-      
-      const response = await createProduct(productData, primaryImage);
-      
-      if (response && response.code === 201) {
-        toast.success('Product added successfully!');
-        
-        // Reset form
-        setNewProduct({
-          name: '',
-          categoryId: '',
-          price: ''
-        });
-        setPrimaryImage(null);
-        setPreviewImage('');
-        setShowAddForm(false);
-        
-        // Update product list
-        loadProducts();
-      }
-    } catch (error) {
-      console.error('Error adding product:', error);
-      const errorMessage = error.response?.data?.message || 'An error occurred while adding the product';
-      toast.error(errorMessage);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   // Handle product deletion
   const handleDeleteProduct = async (productId) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
@@ -218,6 +113,33 @@ const ProductManagement = () => {
         toast.error(errorMessage);
       }
     }
+  };
+
+  // Handle successful product creation
+  const handleProductCreated = () => {
+    setShowAddForm(false);
+    loadProducts();
+  };
+  
+  // Handle product edit
+  const handleEditProduct = (product) => {
+    setEditingProductId(product.id);
+    setEditingProduct(product);
+    // Close add form if it's open
+    setShowAddForm(false);
+  };
+  
+  // Handle successful product edit
+  const handleProductUpdated = () => {
+    setEditingProductId(null);
+    setEditingProduct(null);
+    loadProducts();
+  };
+  
+  // Handle cancel edit
+  const handleCancelEdit = () => {
+    setEditingProductId(null);
+    setEditingProduct(null);
   };
 
   // Format price for display
@@ -267,101 +189,44 @@ const ProductManagement = () => {
                 </div>
               </div>
               <div className="col-auto">
-                <button 
-                  className="btn btn-dark btn-outline-hover-dark mb-3" 
-                  type="button"
-                  onClick={() => setShowAddForm(!showAddForm)}
-                >
-                  {showAddForm ? 'Close Form' : 'Add New Product'}
-                </button>
+                {!editingProductId && (
+                  <button 
+                    className="btn btn-dark btn-outline-hover-dark mb-3" 
+                    type="button"
+                    onClick={() => setShowAddForm(!showAddForm)}
+                  >
+                    {showAddForm ? 'Close Form' : 'Add New Product'}
+                  </button>
+                  
+                )}
+                {editingProductId && (
+                  <button 
+                    className="btn btn-secondary mb-3" 
+                    type="button"
+                    onClick={handleCancelEdit}
+                  >
+                    Cancel Editing
+                  </button>
+                )}
               </div>
             </div>
 
             {/* Add product form */}
-            {showAddForm && (
-              <div className="add-product-form mb-5 p-4 border rounded">
-                <h4 className="mb-4">Add New Product</h4>
-                <form onSubmit={handleSubmit}>
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="productName" className="form-label">Product Name <span className="text-danger">*</span></label>
-                      <input 
-                        type="text" 
-                        className="form-control" 
-                        id="productName" 
-                        name="name"
-                        value={newProduct.name}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="productCategory" className="form-label">Product Category <span className="text-danger">*</span></label>
-                      <input 
-                        type="text" 
-                        className="form-control" 
-                        id="productCategory" 
-                        name="categoryId"
-                        value={newProduct.categoryId}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="productPrice" className="form-label">Price <span className="text-danger">*</span></label>
-                      <input 
-                        type="number" 
-                        className="form-control" 
-                        id="productPrice" 
-                        name="price"
-                        min="0"
-                        step="0.01"
-                        value={newProduct.price}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="productImage" className="form-label">Product Image <span className="text-danger">*</span></label>
-                      <input 
-                        type="file" 
-                        className="form-control" 
-                        id="productImage"
-                        accept="image/jpeg,image/png,image/webp"
-                        onChange={handleImageChange}
-                        required
-                      />
-                      <small className="form-text text-muted">Supported formats: JPG, PNG, WebP. Maximum size: 5MB</small>
-                    </div>
-                    
-                    {previewImage && (
-                      <div className="col-12 mb-3">
-                        <label className="form-label">Image Preview</label>
-                        <div className="image-preview" style={{ maxWidth: '200px' }}>
-                          <img src={previewImage} alt="Preview" className="img-fluid rounded" />
-                        </div>
-                      </div>
-                    )}
-                    
-                    <div className="col-12 mt-3">
-                      <button 
-                        type="submit" 
-                        className="btn btn-dark btn-outline-hover-dark" 
-                        disabled={isSubmitting}
-                      >
-                        {isSubmitting ? 'Processing...' : 'Add Product'}
-                      </button>
-                      <button 
-                        type="button" 
-                        className="btn btn-light ms-2" 
-                        onClick={() => setShowAddForm(false)}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                </form>
-              </div>
+            {showAddForm && !editingProductId && (
+              <AddProductForm 
+                onSuccess={handleProductCreated}
+                onCancel={() => setShowAddForm(false)}
+              />
+            )}
+            
+            {/* Edit product form */}
+            {editingProductId && editingProduct && (
+              <EditProductForm 
+                productId={editingProductId}
+                product={editingProduct}
+                onSuccess={handleProductUpdated}
+                onCancel={handleCancelEdit}
+              />
             )}
 
             {isLoading ? (
@@ -385,7 +250,7 @@ const ProductManagement = () => {
                         <th className="price">Price</th>
                         <th className="quantity">Category</th>
                         <th className="subtotal">ID</th>
-                        <th className="edit">Product details</th>
+                        <th className="edit">Actions</th>
                         <th className="remove">&nbsp;</th>
                       </tr>
                     </thead>
@@ -403,17 +268,24 @@ const ProductManagement = () => {
                           <td className="name">
                             <Link to={`/product-details/${product.id}`}>{product.name}</Link>
                           </td>
-                          <td className="price">
+                          <td className="name">
                             <span>{formatPrice(product.price)}</span>
                           </td>
-                          <td className="price">
-                            <span>{product.categoryName}</span>
+                          <td className="name">
+                            <span>{product.category}</span>
                           </td>
-                          <td className="subtotal">
+                          <td className="name">
                             <span>{product.id}</span>
                           </td>
                           <td className="edit">
-                            <span>Edit</span>
+                            <button 
+                              type="button" 
+                              className="btn btn-primary btn-sm"
+                              onClick={() => handleEditProduct(product)}
+                              title="Edit product details"
+                            >
+                              <i className="fas fa-edit"></i> Edit
+                            </button>
                           </td>
                           <td className="remove">
                             <button 
