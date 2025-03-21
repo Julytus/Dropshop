@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchProductDetail, getProductById } from '../../services/api';
+import { addToCart } from '../../services/cartService';
+import '../../styles/cart.css';
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -11,6 +13,14 @@ const ProductDetail = () => {
     const [selectedColor, setSelectedColor] = useState('');
     const [selectedSize, setSelectedSize] = useState('');
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isDragging, setIsDragging] = useState(false);
+    const [startX, setStartX] = useState(0);
+    const [currentTranslate, setCurrentTranslate] = useState(0);
+    const [prevTranslate, setPrevTranslate] = useState(0);
+    const [isLongPress, setIsLongPress] = useState(false);
+    const longPressTimer = useRef(null);
+    const sliderRef = useRef(null);
+    const [showAddToCartMessage, setShowAddToCartMessage] = useState(false);
 
     useEffect(() => {
         const loadProductData = async () => {
@@ -46,6 +56,83 @@ const ProductDetail = () => {
     const handleNextImage = () => {
         const totalImages = allImages.length;
         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % totalImages);
+    };
+
+    const handleDragStart = (e) => {
+        e.preventDefault();
+        const startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+        setStartX(startX);
+        
+        longPressTimer.current = setTimeout(() => {
+            setIsLongPress(true);
+            setIsDragging(true);
+            setPrevTranslate(currentTranslate);
+        }, 30);
+    };
+
+    const handleDragMove = (e) => {
+        if (!isLongPress || !isDragging) return;
+        
+        e.preventDefault();
+        const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+        const diff = currentX - startX;
+        setCurrentTranslate(prevTranslate + diff);
+    };
+
+    const handleDragEnd = (e) => {
+        e.preventDefault();
+        
+        if (longPressTimer.current) {
+            clearTimeout(longPressTimer.current);
+            longPressTimer.current = null;
+        }
+
+        if (isLongPress) {
+            const movedBy = currentTranslate - prevTranslate;
+            
+            if (Math.abs(movedBy) > 100) {
+                if (movedBy < 0) {
+                    handleNextImage();
+                } else {
+                    handlePrevImage();
+                }
+            }
+            
+            setCurrentTranslate(prevTranslate);
+        }
+        
+        setIsDragging(false);
+        setIsLongPress(false);
+    };
+
+    useEffect(() => {
+        return () => {
+            if (longPressTimer.current) {
+                clearTimeout(longPressTimer.current);
+            }
+        };
+    }, []);
+
+    const handleAddToCart = () => {
+        if (!selectedSize && productDetail.sizes?.length > 0) {
+            alert('Please select a size');
+            return;
+        }
+        if (!selectedColor && productDetail.colors?.length > 0) {
+            alert('Please select a color');
+            return;
+        }
+
+        const cartItem = {
+            id: product.id,
+            size: selectedSize,
+            color: selectedColor,
+            quantity: quantity
+        };
+
+        addToCart(cartItem);
+        setShowAddToCartMessage(true);
+        setTimeout(() => setShowAddToCartMessage(false), 3000);
     };
 
     if (loading) {
@@ -99,7 +186,18 @@ const ProductDetail = () => {
                             >
                                 <i className="fas fa-expand"></i>
                             </button>
-                            <div className="product-gallery-slider slick-initialized slick-slider slick-dotted">
+                            <div 
+                                className="product-gallery-slider slick-initialized slick-slider slick-dotted"
+                                ref={sliderRef}
+                                onMouseDown={handleDragStart}
+                                onMouseMove={handleDragMove}
+                                onMouseUp={handleDragEnd}
+                                onMouseLeave={handleDragEnd}
+                                onTouchStart={handleDragStart}
+                                onTouchMove={handleDragMove}
+                                onTouchEnd={handleDragEnd}
+                                style={{ userSelect: 'none', touchAction: 'none' }}
+                            >
                                 <button className="slick-prev slick-arrow" onClick={handlePrevImage}>
                                     <i className="ti-angle-left"></i>
                                 </button>
@@ -109,8 +207,11 @@ const ProductDetail = () => {
                                         style={{ 
                                             opacity: 1, 
                                             width: `${allImages.length * 600}px`,
-                                            transform: `translate3d(${-currentImageIndex * 600}px, 0px, 0px)`,
-                                            transition: 'transform 500ms ease'
+                                            transform: `translate3d(${-currentImageIndex * 600 + currentTranslate}px, 0px, 0px)`,
+                                            transition: isDragging ? 'none' : 'transform 500ms ease',
+                                            cursor: isDragging ? 'grabbing' : 'grab',
+                                            userSelect: 'none',
+                                            touchAction: 'none'
                                         }}
                                     >
                                         {allImages.map((img, index) => (
@@ -118,7 +219,7 @@ const ProductDetail = () => {
                                                 key={index} 
                                                 className={`slick-slide ${index === currentImageIndex ? 'slick-current slick-active' : ''}`}
                                                 data-slick-index={index}
-                                                style={{ width: '600px' }}
+                                                style={{ width: '600px', userSelect: 'none', touchAction: 'none' }}
                                                 role="tabpanel"
                                                 id={`slick-slide${index + 10}`}
                                                 aria-describedby={`slick-slide-control${index + 10}`}
@@ -126,7 +227,7 @@ const ProductDetail = () => {
                                             >
                                                 <div>
                                                     <div className="product-zoom" data-image={img} style={{ width: '100%', display: 'inline-block' }}>
-                                                        <img src={img} alt={`${product.name} ${index + 1}`} />
+                                                        <img src={img} alt={`${product.name} ${index + 1}`} style={{ userSelect: 'none', touchAction: 'none' }} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -204,9 +305,8 @@ const ProductDetail = () => {
                             </div>
                             <div className="product-ratings">
                                 <span className="star-rating">
-                                    <span className="rating-active" style={{ width: productDetail.star ? `${productDetail.star * 20}%` : '0%' }}>ratings</span>
+                                    <span className="rating-active" style={{ width: productDetail.star ? `${productDetail.star * 20}%` : '100%' }}>ratings</span>
                                 </span>
-                                <a href="#reviews" className="review-link">(<span className="count">0</span> customer reviews)</a>
                             </div>
                             <h3 className="product-title">{product.name}</h3>
                             <div className="product-price">${product.price}</div>
@@ -277,9 +377,21 @@ const ProductDetail = () => {
                                 </table>
                             </div>
                             <div className="product-buttons">
-                                <a href="#" className="btn btn-dark btn-outline-hover-dark">
+                                <a 
+                                    href="#" 
+                                    className="btn btn-dark btn-outline-hover-dark"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleAddToCart();
+                                    }}
+                                >
                                     <i className="fas fa-shopping-cart"></i> Add to Cart
                                 </a>
+                                {showAddToCartMessage && (
+                                    <div className="add-to-cart-message">
+                                        Product added to cart successfully!
+                                    </div>
+                                )}
                             </div>
                             <div className="product-meta">
                                 <table>

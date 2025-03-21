@@ -198,11 +198,7 @@ export const createProductDetail = async (productId, productDetailData) => {
 
 export const fetchProductDetail = async (productId) => {
     try {
-        const response = await axios.get(`/api/v1/product-detail/${productId}`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+        const response = await axios.get(`/api/v1/product-detail/${productId}`);
         return response.data;
     } catch (error) {
         console.error('API fetchProductDetail, Error:', error);
@@ -288,11 +284,7 @@ export const getAllProducts = async (page = 1, limit = 8) => {
 
 export const getProductById = async (productId) => {
     try {
-        const response = await axios.get(`/api/v1/product/${productId}`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+        const response = await axios.get(`/api/v1/product/${productId}`);
         return response.data;
     } catch (error) {
         console.error('API getProductById, Error:', error);
@@ -303,3 +295,46 @@ export const getProductById = async (productId) => {
         throw error;
     }
 }
+
+//Order
+export const createOrder = async (orderData) => {
+    try {
+        const response = await axios.post('/api/v1/order', orderData);
+        return response.data;
+    } catch (error) {
+        console.error('API createOrder, Error:', error);
+        throw error;
+    }
+};
+
+export const getMyOrders = async (page = 1, limit = 10) => {
+    try {
+        const response = await axios.get('/api/v1/order', {
+            params: {
+                page,
+                limit
+            },
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('API getMyOrders, Error:', error);
+        throw error;
+    }
+};
+
+export const getOrderDetail = async (orderId) => {
+    try {
+        const response = await axios.get(`/api/v1/order/${orderId}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('API getOrderDetail, Error:', error);
+        throw error;
+    }
+}; 

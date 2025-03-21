@@ -15,6 +15,10 @@ import ProductDetail from "./pages/productdetail";
 import Error404 from "./components/error404";
 import Loading from "./components/loading";
 import AuthProvider from "./components/AuthProvider";
+import Checkout from './pages/checkout';
+import OrderSuccess from './pages/ordersuccess';
+import OrderDetail from './pages/orderdetail';
+import './styles/ordersuccess.css';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -48,6 +52,30 @@ export default function App() {
       errorElement: <Error404 />,
       children: [
         {index: true, element: <Home />},
+      ]
+    },
+    {
+      path: "/checkout",
+      element: <Layout />,
+      errorElement: <Error404 />,
+      children: [
+        {index: true, element: <Checkout />},
+      ]
+    },
+    {
+      path: "/order-success",
+      element: <Layout />,
+      errorElement: <Error404 />,
+      children: [
+        {index: true, element: <OrderSuccess />},
+      ]
+    },
+    {
+      path: "/order-detail/:id",
+      element: <Layout />,
+      errorElement: <Error404 />,
+      children: [
+        {index: true, element: <OrderDetail />},
       ]
     },
     {

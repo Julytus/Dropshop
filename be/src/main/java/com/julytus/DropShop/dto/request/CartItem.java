@@ -8,11 +8,9 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AddressRequest {
-    String country;
-    String street;
-    String city;
-    String district;
-    String number;
-    String zip;
+public class CartItem {
+    String productId;
+    String size;
+    String color;
+    Integer quantity;
 }

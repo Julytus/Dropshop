@@ -6,7 +6,6 @@ import './header.css';
 import MainMenu from './MainMenu';
 import HeaderTools from './HeaderTools';
 import OffcanvasSearch from './OffcanvasSearch';
-import OffcanvasWishlist from './OffcanvasWishlist';
 import OffcanvasCart from './OffcanvasCart';
 import OffcanvasMobileMenu from './OffcanvasMobileMenu';
 
@@ -120,7 +119,6 @@ const Header = () => {
 
             {/* Offcanvas Components */}
             <OffcanvasSearch isOpen={activeOffcanvas === 'search'} onClose={handleOffcanvasClose} />
-            <OffcanvasWishlist isOpen={activeOffcanvas === 'wishlist'} onClose={handleOffcanvasClose} />
             <OffcanvasCart isOpen={activeOffcanvas === 'cart'} onClose={handleOffcanvasClose} />
             <OffcanvasMobileMenu isOpen={activeOffcanvas === 'mobile-menu'} onClose={handleOffcanvasClose} />
 

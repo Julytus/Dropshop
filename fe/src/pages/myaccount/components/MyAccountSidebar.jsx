@@ -50,7 +50,7 @@ const MyAccountSidebar = ({ activeTab, setActiveTab }) => {
           setActiveTab('address');
         }}
       >
-        Address <i className="far fa-map-marker-alt"></i>
+        Address (Comming Soon) <i className="far fa-map-marker-alt"></i>
       </a>
       <a 
         href="#" 

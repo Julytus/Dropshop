@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { getCart } from '../../services/cartService';
 
 const MobileMenuToggle = ({ onClick }) => (
     <a href="#" onClick={(e) => {
@@ -19,6 +20,32 @@ const HeaderTools = React.memo(({ isMobile = false, onOffcanvasOpen }) => {
     // Sử dụng refs để lưu trữ các hiệu ứng ripple element
     const rippleRefs = useRef({});
     
+    const [cartCount, setCartCount] = useState(0);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        // Kiểm tra trạng thái đăng nhập
+        const token = localStorage.getItem('token');
+        setIsLoggedIn(!!token);
+
+        const updateCartCount = () => {
+            const cartItems = getCart();
+            const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+            setCartCount(totalItems);
+        };
+
+        // Cập nhật số lượng khi component mount
+        updateCartCount();
+
+        // Lắng nghe sự kiện storage để cập nhật số lượng khi có thay đổi
+        window.addEventListener('storage', updateCartCount);
+        
+        // Cleanup event listener khi component unmount
+        return () => {
+            window.removeEventListener('storage', updateCartCount);
+        };
+    }, []);
+
     const handleOffcanvasClick = (offcanvasId, e) => {
         // Ngăn chặn hành vi mặc định và sự kiện bubbling
         e.preventDefault();
@@ -69,23 +96,19 @@ const HeaderTools = React.memo(({ isMobile = false, onOffcanvasOpen }) => {
 
     return (
         <div className="header-tools justify-content-end">
-            <div className={`header-login ${isMobile ? 'd-none d-sm-block' : ''}`}>
-                <Link to="/my-account"><i className="far fa-user"></i></Link>
-            </div>
+            {isLoggedIn && (
+                <div className={`header-login ${isMobile ? 'd-none d-sm-block' : ''}`}>
+                    <Link to="/my-account"><i className="far fa-user"></i></Link>
+                </div>
+            )}
             <div className={`header-search ${isMobile ? 'd-none d-sm-block' : ''}`}>
                 <a href="#" onClick={(e) => handleOffcanvasClick('search', e)} className="offcanvas-toggle">
                     <i className="fas fa-search"></i>
                 </a>
             </div>
-            <div className={`header-wishlist ${isMobile ? 'd-none d-sm-block' : ''}`}>
-                <a href="#" onClick={(e) => handleOffcanvasClick('wishlist', e)} className="offcanvas-toggle">
-                    <span className="wishlist-count">3</span>
-                    <i className="far fa-heart"></i>
-                </a>
-            </div>
             <div className="header-cart">
                 <a href="#" onClick={(e) => handleOffcanvasClick('cart', e)} className="offcanvas-toggle">
-                    <span className="cart-count">3</span>
+                    {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
                     <i className="fas fa-shopping-cart"></i>
                 </a>
             </div>

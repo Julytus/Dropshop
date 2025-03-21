@@ -47,7 +47,4 @@ public class ProductDetail extends AbstractEntity<String> {
 
     @Column(name = "sold_quantity")
     Integer soldQuantity;
-
-    @OneToMany(mappedBy = "productDetail", cascade = CascadeType.ALL)
-    Set<OrderDetail> orderDetails = new HashSet<>();
 }

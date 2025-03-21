@@ -27,7 +27,7 @@ const MyAccount = () => {
   return (
     <>
       {/* Page Title/Header Start */}
-      <div className="page-title-section section" style={{ backgroundImage: 'url("assets/images/bg/page-title-1.webp")' }}>
+      <div className="page-title-section section" data-bg-image="assets/images/bg/page-title-1.webp" style={{ backgroundImage: 'url("assets/images/bg/page-title-1.webp")' }}>
         <div className="container">
           <div className="row">
             <div className="col">

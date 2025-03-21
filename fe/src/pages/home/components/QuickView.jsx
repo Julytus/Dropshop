@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchProductDetail } from '../../../services/api';
+import { addToCart } from '../../../services/cartService';
+import '../../../styles/cart.css';
 
 const QuickView = ({ show, onClose, product }) => {
     const [quantity, setQuantity] = useState(1);
@@ -8,6 +10,7 @@ const QuickView = ({ show, onClose, product }) => {
     const [loading, setLoading] = useState(true);
     const [selectedColor, setSelectedColor] = useState('');
     const [selectedSize, setSelectedSize] = useState('');
+    const [showAddToCartMessage, setShowAddToCartMessage] = useState(false);
 
     useEffect(() => {
         const loadProductDetail = async () => {
@@ -27,6 +30,28 @@ const QuickView = ({ show, onClose, product }) => {
             loadProductDetail();
         }
     }, [show, product]);
+
+    const handleAddToCart = () => {
+        if (!selectedSize && productDetail?.sizes?.length > 0) {
+            alert('Please select a size');
+            return;
+        }
+        if (!selectedColor && productDetail?.colors?.length > 0) {
+            alert('Please select a color');
+            return;
+        }
+
+        const cartItem = {
+            id: product.id,
+            size: selectedSize,
+            color: selectedColor,
+            quantity: quantity
+        };
+
+        addToCart(cartItem);
+        setShowAddToCartMessage(true);
+        setTimeout(() => setShowAddToCartMessage(false), 3000);
+    };
 
     if (!show || !product) return null;
 
@@ -129,9 +154,17 @@ const QuickView = ({ show, onClose, product }) => {
                                     <Link to="#" className="btn btn-icon btn-outline-body btn-hover-dark">
                                         <i className="far fa-heart"></i>
                                     </Link>
-                                    <Link to="#" className="btn btn-dark btn-outline-hover-dark">
+                                    <button 
+                                        className="btn btn-dark btn-outline-hover-dark"
+                                        onClick={handleAddToCart}
+                                    >
                                         <i className="fas fa-shopping-cart"></i> Add to Cart
-                                    </Link>
+                                    </button>
+                                    {showAddToCartMessage && (
+                                        <div className="add-to-cart-message">
+                                            Product added to cart successfully!
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="product-brands">
                                     <span className="title">Brands</span>

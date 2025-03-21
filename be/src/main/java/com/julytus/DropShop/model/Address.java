@@ -13,22 +13,21 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Address extends AbstractEntity<String> {
+    @Column(name = "country")
+    String country;
 
-    @Column(name = "number")
-    String number;
-
-    @Column(name = "street")
+    @Column(name = "street_address")
     String street;
-
-    @Column(name = "ward")
-    String ward;
-
-    @Column(name = "district")
-    String district;
 
     @Column(name = "city")
     String city;
 
-    @OneToOne(mappedBy = "address", fetch = FetchType.EAGER)
-    Order order;
+    @Column(name = "district")
+    String district;
+
+    @Column(name = "number")
+    String number;
+
+    @Column(name = "zip")
+    String zip;
 }
