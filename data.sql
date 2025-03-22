@@ -8,7 +8,8 @@ INSERT INTO `sizes`(`id`, `created_at`, `updated_at`, `name`) VALUES ('1',NOW(),
                                                                       ('3',NOW(),NOW(),'L'),
                                                                      ('4',NOW(),NOW(),'XL'),
                                                                      ('5',NOW(),NOW(),'XXL');
-INSERT INTO `categories`(`id`, `created_at`, `updated_at`, `name`) VALUES ('1',NOW(),NOW(),'SPORT'),
+INSERT INTO `categories`(`id`, `created_at`, `updated_at`, `name`) VALUES
+                                                                     ('1',NOW(),NOW(),'SPORT'),
                                                                      ('2',NOW(),NOW(),'BOOK');
 
 INSERT INTO `users` (`id`, `created_at`, `updated_at`, `avatar_url`, `birthday`, `email`, `full_name`, `password`, `phone_number`, `user_status`, `role_id`) VALUES

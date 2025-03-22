@@ -38,7 +38,7 @@ public class ProductDetailController {
                 .build();
     }
 
-    @PutMapping(value = "/product-detail/{id}",
+    @PutMapping(value =  "/product-detail/{id}",
                 consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     ResponseData<ProductDetailResponse> update(
             @PathVariable String id,
