@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
     private final JwtDecoderCustomizer decoder;
     private static final String[] WHITELIST = {
+            "/api/v1/search-product",
             "/api/v1/product/**",
             "/api/v1/product-detail/**",
             "/api/v1/auth/**",
@@ -78,7 +79,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:3001"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:3001", 
+                                                    "http://localhost:80", "http://julytus"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowCredentials(true); // Allow credentials

@@ -26,4 +26,7 @@ public class UserResponse {
 
     @JsonProperty("avatar_url")
     String avatarUrl;
+
+    @JsonProperty("role")
+    String role;
 }

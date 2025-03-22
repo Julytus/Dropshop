@@ -72,6 +72,16 @@ instance.interceptors.response.use(function (response) {
 
     // Nếu lỗi 401 và chưa thử refresh token
     if (error.response?.status === 401 && !originalRequest._retry) {
+        // Kiểm tra nếu đây là request đăng nhập thì không refresh token
+        if (originalRequest.url === '/api/v1/auth/sign-in') {
+            return Promise.reject(error);
+        }
+        
+        // Chỉ refresh token cho các request fetchProfile (/api/v1/user)
+        // if (originalRequest.url !== '/api/v1/user') {
+        //     return Promise.reject(error);
+        // }
+        
         if (isRefreshing) {
             // Nếu đang refresh token, thêm request vào hàng đợi
             return new Promise((resolve, reject) => {

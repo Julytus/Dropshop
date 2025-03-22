@@ -12,6 +12,7 @@ public class UserResponseMapper {
                 .avatarUrl(user.getAvatarUrl())
                 .fullName(user.getFullName())
                 .phoneNumber(user.getPhoneNumber())
+                .role(user.getRole().getName())
                 .build();
     }
 }
