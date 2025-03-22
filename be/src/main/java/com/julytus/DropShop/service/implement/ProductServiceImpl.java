@@ -16,6 +16,7 @@ import com.julytus.DropShop.service.CategoryService;
 import com.julytus.DropShop.service.FileProcessor;
 import com.julytus.DropShop.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j(topic = "PRODUCT-SERVICE")
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;

@@ -3,6 +3,7 @@ services:
     build:
       context: ./be
       dockerfile: Dockerfile
+    container_name: backend
     depends_on:
       mysql:
         condition: service_healthy
@@ -25,7 +26,12 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=${REDIS_PORT}
       - MINIO_URL=http://${HOSTNAME}:${MINIO_API_PORT}
+      - MINIO_ACCESS_KEY=${MINIO_ROOT_USER}
+      - MINIO_SECRET_KEY=${MINIO_ROOT_PASSWORD}
       - SPRING_ELASTICSEARCH_URIS=http://elasticsearch:9200
+    extra_hosts:
+      - "api.julytus.local:host-gateway"
+      - "julytus:host-gateway"
     networks:
       - july
 

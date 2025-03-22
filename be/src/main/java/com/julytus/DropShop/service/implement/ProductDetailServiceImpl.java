@@ -17,6 +17,7 @@ import com.julytus.DropShop.repository.SizeRepository;
 import com.julytus.DropShop.service.FileProcessor;
 import com.julytus.DropShop.service.ProductDetailService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j(topic = "PRODUCT-DETAIL-SERVICE")
 public class ProductDetailServiceImpl implements ProductDetailService {
     
     private final ProductDetailRepository productDetailRepository;
