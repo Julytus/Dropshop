@@ -10,9 +10,11 @@ lerna-debug.log*
 package-lock.json
 
 node_modules
-.idea
 dist
 dist-ssr
+minio-data
+redis-data
+volumes
 *.local
 
 # Editor directories and files

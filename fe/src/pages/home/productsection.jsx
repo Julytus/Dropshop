@@ -50,7 +50,9 @@ const ProductSection = () => {
                 </div>
                 <div className="product-info">
                     <h6 className="title">
-                        <Link to={`/product-details/${product.id}`}>{product.name}</Link>
+                        <Link to={`/product-details/${product.id}`}>
+                            {product.name.length > 40 ? product.name.substring(0, 40) + '...' : product.name}
+                        </Link>
                     </h6>
                     <span className="price">
                         <span className="new">${product.price.toFixed(2)}</span>
