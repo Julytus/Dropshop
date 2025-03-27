@@ -337,4 +337,116 @@ export const getOrderDetail = async (orderId) => {
         console.error('API getOrderDetail, Error:', error);
         throw error;
     }
-}; 
+};
+
+//Category
+export const getAllCategories = async (page = 1, limit = 5) => {
+    try {
+        const response = await axios.get('/api/v1/category/all', {
+            params: {
+                page,
+                limit
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('API getAllCategories, Error:', error);
+        throw error;
+    }
+}
+
+export const getCategoryById = async (categoryId) => {
+    try {
+        const response = await axios.get(`/api/v1/category/${categoryId}`);
+        return response.data;
+    } catch (error) {
+        console.error('API getCategoryById, Error:', error);
+        throw error;
+    }
+}
+
+export const createCategory = async (categoryData) => {
+    try {
+        const response = await axios.post('/api/v1/category', categoryData, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('API createCategory, Error:', error);
+        throw error;
+    }
+}
+
+export const updateCategory = async (categoryId, categoryData) => {
+    try {
+        const response = await axios.put(`/api/v1/category/${categoryId}`, categoryData, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('API updateCategory, Error:', error);
+        throw error;
+    }
+}
+
+//Color
+export const getAllColors = async (page = 1, limit = 6) => {
+    try {
+        const response = await axios.get('/api/v1/color/all', {
+            params: {
+                page,
+                limit
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('API getAllColors, Error:', error);
+        throw error;
+    }
+}
+
+export const getColorByName = async (name) => {
+    try {
+        const response = await axios.get(`/api/v1/color/${name}`);
+        return response.data;
+    } catch (error) {
+        console.error('API getColorByName, Error:', error);
+        throw error;
+    }
+}
+
+export const createColor = async (colorData) => {
+    try {
+        const response = await axios.post('/api/v1/color', colorData, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('API createColor, Error:', error);
+        throw error;
+    }
+}
+
+export const updateColor = async (id, colorData) => {
+    try {
+        const response = await axios.put(`/api/v1/color/${id}`, colorData, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('API updateColor, Error:', error);
+        throw error;
+    }
+} 

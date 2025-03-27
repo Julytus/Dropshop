@@ -1,9 +1,7 @@
 package com.julytus.DropShop.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -22,6 +20,10 @@ public class Category extends AbstractEntity<String> {
     @Column(name = "name")
     String name;
 
+    @Column(name = "description")
+    String description;
+
     @OneToMany(mappedBy = "category")
+    @JsonIgnore
     Set<Product> products = new HashSet<>();
 }

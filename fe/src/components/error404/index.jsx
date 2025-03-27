@@ -1,11 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Header from "../../components/header";
 
 const Error404 = () => {
   return (
     <div>
-      <Header />
       <div
         className="section-404 section"
         style={{ backgroundImage: "url('assets/images/bg/bg-404.webp')" }}

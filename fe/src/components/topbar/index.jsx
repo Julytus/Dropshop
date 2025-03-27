@@ -43,14 +43,16 @@ const TopBar = () => {
                     <div className="col-auto d-none d-md-block">
                         <div className="topbar-menu d-flex flex-row-reverse">
                             <ul>
+                                {user?.role === 'ADMIN' && (
+                                    <li>
+                                        <Link to="/prod-management">
+                                            <i className="fa fa-server"></i> Admin
+                                        </Link>
+                                    </li>
+                                )}
                                 <li>
                                     <a href="#">
-                                        <i className="fa fa-map-marker-alt"></i> Store Location
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i className="fa fa-truck"></i> Order Status
+                                        <i className="fa fa-bell"></i> Notification
                                     </a>
                                 </li>
                                 {user.fullName!="" ? (
