@@ -22,4 +22,7 @@ import lombok.experimental.FieldDefaults;
 public class Color extends AbstractEntity<String> {
     @Column(name = "name")
     String name;
+
+    @Column(name = "color_code")
+    String colorCode;
 } 

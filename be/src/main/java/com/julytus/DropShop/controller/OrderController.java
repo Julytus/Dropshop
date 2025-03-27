@@ -19,7 +19,6 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/order")
-    @IsUser
     ResponseData<OrderResponse> createOrder(@RequestBody OrderRequest request) {
         var result = orderService.create(request);
         return ResponseData.<OrderResponse>builder()

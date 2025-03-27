@@ -7,4 +7,6 @@ import lombok.Getter;
 public class CategoryRequest {
     @NotBlank(message = "name cannot be blank")
     private String name;
+
+    private String description;
 }

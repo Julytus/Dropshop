@@ -4,6 +4,7 @@ import { fetchProducts, deleteProduct } from '../../services/api';
 import { toast } from 'react-toastify';
 import AddProductForm from './AddProductForm';
 import EditProductForm from './EditProductForm';
+import ManageBar from '../../components/managebar';
 
 const ProductManagement = () => {
   const [products, setProducts] = useState([]);
@@ -151,13 +152,15 @@ const ProductManagement = () => {
     <>
       {/* Page Title/Header Start */}
       <div className="container">
+      <ManageBar />
+
         <div className="row">
+
           <div className="col">
             <div className="page-title">
               <h1 className="title">Product Management</h1>
               <ul className="breadcrumb">
                 <li className="breadcrumb-item"><Link to="/">Home</Link></li>
-                <li className="breadcrumb-item"><Link to="/admin">Admin</Link></li>
                 <li className="breadcrumb-item active">Product</li>
               </ul>
             </div>

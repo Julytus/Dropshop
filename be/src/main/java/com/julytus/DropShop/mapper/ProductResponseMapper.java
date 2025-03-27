@@ -20,6 +20,7 @@ public class ProductResponseMapper {
 
     public static List<ProductResponse> fromPageProduct(Page<Product> products) {
         return products.getContent().stream()
-                .map(ProductResponseMapper::fromProduct).toList();
+                .map(ProductResponseMapper::fromProduct)
+                .toList();
     }
 }

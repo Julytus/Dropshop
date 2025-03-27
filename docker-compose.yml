@@ -1,8 +1,8 @@
 services:
   backend:
     build:
-      context: ./be
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: docker/backend/Dockerfile
     container_name: backend
     depends_on:
       mysql:
@@ -37,8 +37,8 @@ services:
 
   frontend:
     build:
-      context: ./fe
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: docker/frontend/Dockerfile
     container_name: frontend
     ports:
       - "80:80"
