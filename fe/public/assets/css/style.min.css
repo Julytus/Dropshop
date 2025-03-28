@@ -479,11 +479,11 @@ only screen and (min-width:768px)and (max-width:991px) {
 
 div.homepage-bg1 {
     padding: 0 15px 15px !important;
-    background-color: #f4ede7
+    background-color: #d6dee1
 }
 
 div.homepage-bg1 .topbar-section {
-    background-color: #f4ede7 !important
+    background-color: #d6dee1 !important
 }
 
 div.homepage-bg1.offcanvas-open {
@@ -4068,7 +4068,7 @@ only screen and (max-width:767px) {
     -ms-transform: scale(0.3);
     transform: scale(0.3);
     opacity: 0;
-    background-color: #f4ede7
+    background-color: #d6dee1
 }
 
 .offcanvas.offcanvas-overlay-menu .inner {
@@ -4563,7 +4563,7 @@ only screen and (max-width:767px) {
     text-align: center;
     color: #333;
     border-radius: 50%;
-    background-color: #f4ede7
+    background-color: #d6dee1
 }
 
 .offcanvas-social a:hover {
@@ -14428,7 +14428,7 @@ only screen and (min-width:768px)and (max-width:991px) {
     -webkit-transition: all .5s ease 0s;
     transition: all .5s ease 0s;
     opacity: 0;
-    background-color: #f4ede7
+    background-color: #d6dee1
 }
 
 .portfolio .thumbnail img {
@@ -15197,7 +15197,7 @@ only screen and (min-width:768px)and (max-width:991px) {
 }
 
 .footer1-section {
-    background-color: #f4ede7
+    background-color: #d6dee1
 }
 
 .footer1-logo {

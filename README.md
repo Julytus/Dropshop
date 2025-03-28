@@ -19,7 +19,7 @@
 1. Get the latest source code
 2. Add the following records to your host file:
 ```
-127.0.0.1 api.julytus.local
+127.0.0.1 api.julytus.site
 127.0.0.1 julytus
 ```
 3. Open terminal of your choice, go to `dropshop` directory, run `docker compose up`, wait for all the containers up and running

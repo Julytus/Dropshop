@@ -340,7 +340,7 @@ export const getOrderDetail = async (orderId) => {
 };
 
 //Category
-export const getAllCategories = async (page = 1, limit = 5) => {
+export const getAllCategories = async (page = 1, limit = 10) => {
     try {
         const response = await axios.get('/api/v1/category/all', {
             params: {
@@ -396,7 +396,7 @@ export const updateCategory = async (categoryId, categoryData) => {
 }
 
 //Color
-export const getAllColors = async (page = 1, limit = 6) => {
+export const getAllColors = async (page = 1, limit = 50) => {
     try {
         const response = await axios.get('/api/v1/color/all', {
             params: {
@@ -447,6 +447,62 @@ export const updateColor = async (id, colorData) => {
         return response.data;
     } catch (error) {
         console.error('API updateColor, Error:', error);
+        throw error;
+    }
+}
+
+//Size
+export const getAllSizes = async (page = 1, limit = 50) => {
+    try {
+        const response = await axios.get('/api/v1/size/all', {
+            params: {
+                page,
+                limit
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('API getAllSizes, Error:', error);
+        throw error;
+    }
+}
+
+export const getSizeByName = async (name) => {
+    try {
+        const response = await axios.get(`/api/v1/size/${name}`);
+        return response.data;
+    } catch (error) {
+        console.error('API getSizeByName, Error:', error);
+        throw error;
+    }
+}
+
+export const createSize = async (sizeData) => {
+    try {
+        const response = await axios.post('/api/v1/size', sizeData, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('API createSize, Error:', error);
+        throw error;
+    }
+}
+
+export const updateSize = async (id, sizeData) => {
+    try {
+        const response = await axios.put(`/api/v1/size/${id}`, sizeData, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('API updateSize, Error:', error);
         throw error;
     }
 } 

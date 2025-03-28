@@ -34,7 +34,7 @@ public class ProductDetailMapper {
     public ProductDetailResponse toResponse(ProductDetail entity) {
         ProductDetailResponse response = new ProductDetailResponse();
         response.setColors(entity.getColors().stream()
-                .map(Color::getName)
+                .map(Color::getColorCode)
                 .collect(Collectors.toList()));
         response.setSizes(entity.getSizes().stream()
                 .map(Size::getName)

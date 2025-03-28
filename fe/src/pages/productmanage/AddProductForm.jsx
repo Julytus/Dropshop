@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { createProduct, createProductDetail } from '../../services/api';
+import React, { useState, useEffect } from 'react';
+import { createProduct, createProductDetail, getAllColors, getAllSizes, getAllCategories } from '../../services/api';
 import { toast } from 'react-toastify';
 
 const AddProductForm = ({ onSuccess, onCancel }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
   // State for new product form
   const [newProduct, setNewProduct] = useState({
@@ -26,6 +27,45 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
   // State for thumbnail images
   const [thumbnails, setThumbnails] = useState([]);
   const [thumbnailPreviews, setThumbnailPreviews] = useState([]);
+
+  // State for options
+  const [colors, setColors] = useState([]);
+  const [sizes, setSizes] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  // Load options when component mounts
+  useEffect(() => {
+    loadOptions();
+  }, []);
+
+  const loadOptions = async () => {
+    try {
+      setIsLoading(true);
+      
+      // Load colors
+      const colorsResponse = await getAllColors();
+      if (colorsResponse && colorsResponse.code === 200 && colorsResponse.data) {
+        setColors(colorsResponse.data.data);
+      }
+
+      // Load sizes
+      const sizesResponse = await getAllSizes();
+      if (sizesResponse && sizesResponse.code === 200 && sizesResponse.data) {
+        setSizes(sizesResponse.data.data);
+      }
+
+      // Load categories
+      const categoriesResponse = await getAllCategories();
+      if (categoriesResponse && categoriesResponse.code === 200 && categoriesResponse.data) {
+        setCategories(categoriesResponse.data.data);
+      }
+    } catch (error) {
+      console.error('Error loading options:', error);
+      toast.error('Failed to load form options');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -142,8 +182,8 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
       return;
     }
     
-    if (!newProduct.categoryId.trim()) {
-      toast.error('Product category cannot be empty');
+    if (!newProduct.categoryId) {
+      toast.error('Please select a category');
       return;
     }
     
@@ -237,6 +277,19 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
     setThumbnailPreviews([]);
   };
 
+  if (isLoading) {
+    return (
+      <div className="add-product-form mb-5 p-4 border rounded">
+        <div className="text-center py-3">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p className="mt-2">Loading form options...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="add-product-form mb-5 p-4 border rounded">
       <h4 className="mb-4">Add New Product</h4>
@@ -256,15 +309,21 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
           </div>
           <div className="col-md-6 mb-3">
             <label htmlFor="productCategory" className="form-label">Product Category <span className="text-danger">*</span></label>
-            <input 
-              type="text" 
+            <select 
               className="form-control" 
               id="productCategory" 
               name="categoryId"
               value={newProduct.categoryId}
               onChange={handleInputChange}
               required
-            />
+            >
+              <option value="">Select a category</option>
+              {categories.map(category => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="col-md-6 mb-3">
             <label htmlFor="productPrice" className="form-label">Price <span className="text-danger">*</span></label>
@@ -329,11 +388,11 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
               onChange={handleMultiSelectChange}
               value={productDetail.colorIds}
             >
-              <option value="1">Red</option>
-              <option value="2">Blue</option>
-              <option value="3">Green</option>
-              <option value="4">Black</option>
-              <option value="5">White</option>
+              {colors.map(color => (
+                <option key={color.id} value={color.id} style={{ color: color.colorCode }}>
+                  {color.name}
+                </option>
+              ))}
             </select>
             <small className="form-text text-muted">Hold Ctrl (or Cmd) to select multiple options</small>
           </div>
@@ -348,11 +407,11 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
               onChange={handleMultiSelectChange}
               value={productDetail.sizeIds}
             >
-              <option value="1">S</option>
-              <option value="2">M</option>
-              <option value="3">L</option>
-              <option value="4">XL</option>
-              <option value="5">XXL</option>
+              {sizes.map(size => (
+                <option key={size.id} value={size.id}>
+                  {size.name}
+                </option>
+              ))}
             </select>
             <small className="form-text text-muted">Hold Ctrl (or Cmd) to select multiple options</small>
           </div>

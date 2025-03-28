@@ -12,19 +12,22 @@ const CategoryManagement = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingCategoryId, setEditingCategoryId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   // Load categories when component mounts
   useEffect(() => {
     loadCategories();
-  }, []);
+  }, [currentPage]);
 
   const loadCategories = async () => {
     try {
       setIsLoading(true);
-      const response = await getAllCategories();
+      const response = await getAllCategories(currentPage);
       
       if (response && response.code === 200 && response.data) {
         setCategories(response.data.data);
+        setTotalPages(response.data.total_pages);
       } else {
         toast.error('Failed to load categories');
       }
@@ -45,6 +48,7 @@ const CategoryManagement = () => {
   // Handle category edit
   const handleEditCategory = (categoryId) => {
     setEditingCategoryId(categoryId);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Handle successful category update
@@ -151,34 +155,91 @@ const CategoryManagement = () => {
                     No categories found. Please add a new category!
                   </div>
                 ) : (
-                  <table className="cart-wishlist-table table">
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredCategories.map((category) => (
-                        <tr key={category.id}>
-                          <td>{category.id}</td>
-                          <td>{category.name}</td>
-                          <td>{category.description || '-'}</td>
-                          <td>
-                            <button 
-                              type="button" 
-                              className="btn btn-primary btn-sm"
-                              onClick={() => handleEditCategory(category.id)}
-                            >
-                              <i className="fas fa-edit"></i> Edit
-                            </button>
-                          </td>
+                  <div className="table-responsive">
+                    <table className="cart-wishlist-table table">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Description</th>
+                          <th>Actions</th>
+                          <th>Name</th>
+                          <th>Description</th>
+                          <th>Actions</th>
                         </tr>
+                      </thead>
+                      <tbody>
+                        {Array.from({ length: Math.ceil(filteredCategories.length / 2) }).map((_, rowIndex) => (
+                          <tr key={rowIndex}>
+                            {/* First category in the row */}
+                            <td>{filteredCategories[rowIndex * 2].name}</td>
+                            <td>{filteredCategories[rowIndex * 2].description || '-'}</td>
+                            <td>
+                              <button 
+                                type="button" 
+                                className="btn btn-primary btn-sm"
+                                onClick={() => handleEditCategory(filteredCategories[rowIndex * 2].id)}
+                              >
+                                <i className="fas fa-edit"></i> Edit
+                              </button>
+                            </td>
+
+                            {/* Second category in the row (if exists) */}
+                            {filteredCategories[rowIndex * 2 + 1] && (
+                              <>
+                                <td>{filteredCategories[rowIndex * 2 + 1].name}</td>
+                                <td>{filteredCategories[rowIndex * 2 + 1].description || '-'}</td>
+                                <td>
+                                  <button 
+                                    type="button" 
+                                    className="btn btn-primary btn-sm"
+                                    onClick={() => handleEditCategory(filteredCategories[rowIndex * 2 + 1].id)}
+                                  >
+                                    <i className="fas fa-edit"></i> Edit
+                                  </button>
+                                </td>
+                              </>
+                            )}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <nav className="mt-4">
+                    <ul className="pagination justify-content-center">
+                      <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                        <button 
+                          className="page-link" 
+                          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                          disabled={currentPage === 1}
+                        >
+                          Previous
+                        </button>
+                      </li>
+                      {[...Array(totalPages)].map((_, index) => (
+                        <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                          <button 
+                            className="page-link"
+                            onClick={() => setCurrentPage(index + 1)}
+                          >
+                            {index + 1}
+                          </button>
+                        </li>
                       ))}
-                    </tbody>
-                  </table>
+                      <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                        <button 
+                          className="page-link" 
+                          onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                          disabled={currentPage === totalPages}
+                        >
+                          Next
+                        </button>
+                      </li>
+                    </ul>
+                  </nav>
                 )}
               </>
             )}
