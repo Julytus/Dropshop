@@ -29,8 +29,9 @@ services:
       - MINIO_ACCESS_KEY=${MINIO_ROOT_USER}
       - MINIO_SECRET_KEY=${MINIO_ROOT_PASSWORD}
       - SPRING_ELASTICSEARCH_URIS=http://elasticsearch:9200
+      - SERVER_PORT=8088
     extra_hosts:
-      - "api.julytus.local:host-gateway"
+      - "api.julytus.site:host-gateway"
       - "julytus:host-gateway"
     networks:
       - july
@@ -39,24 +40,24 @@ services:
     build:
       context: .
       dockerfile: docker/frontend/Dockerfile
+      args:
+        - VITE_API_URL=http://api.julytus.site:8088
     container_name: frontend
     ports:
       - "80:80"
     restart: always
     environment:
-      - DOMAIN=api.julytus.local julytus
-      - VIRTUAL_HOST=api.julytus.local
+      - DOMAIN=api.julytus.site julytus
+      - VIRTUAL_HOST=api.julytus.site
       - VIRTUAL_PORT=80
     extra_hosts:
-      - "api.julytus.local:host-gateway"
+      - "api.julytus.site:host-gateway"
       - "julytus:host-gateway"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80"]
       interval: 30s
       timeout: 10s
       retries: 3
-    depends_on:
-      - backend
     networks:
       - july
     deploy:

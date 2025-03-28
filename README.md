@@ -10,7 +10,7 @@
 
 ## Main Features
 - Identity – User authentication & authorization
-- Search –[Spring boot](../../Java/Spring%20boot) Basic search using Elasticsearch
+- Search – Basic search using Elasticsearch
 - Kafka – Synchronizing Product data between the main database and Elasticsearch
 - Redis – Managing token blacklist for secure session management
 - Cart Management – Implementing and optimizing the shopping cart functionality on the frontend
@@ -19,7 +19,7 @@
 1. Get the latest source code
 2. Add the following records to your host file:
 ```
-127.0.0.1 api.julytus.local
+127.0.0.1 api.julytus.site
 127.0.0.1 julytus
 ```
 3. Open terminal of your choice, go to `dropshop` directory, run `docker compose up`, wait for all the containers up and running
