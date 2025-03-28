@@ -26,9 +26,9 @@ const SliceMain = () => {
                             <div className="col-12 learts-mb-30">
                                 <div className="sale-banner5">
                                     <Link to="#" className="inner">
-                                        <img src="assets/images/banner/sale/sale-banner5-1.webp" alt="Sale Banner Image" />
+                                        <img src="assets/images/banner/sale/sale-banner5-1.jpg" alt="Sale Banner Image" />
                                         <div className="content">
-                                            <h3 className="title">Holiday<br /> Gifts</h3>
+                                            <h3 className="title">Shopping<br /> Now</h3>
                                             <span className="price">From $9.00</span>
                                         </div>
                                     </Link>
@@ -41,7 +41,7 @@ const SliceMain = () => {
                                         <img src="assets/images/banner/sale/sale-banner6-1.webp" alt="Sale Banner Image" />
                                         <div className="content">
                                             <img className="icon" src="assets/images/banner/sale/sale-banner1-1.1.webp" alt="" />
-                                            <h3 className="title">Spring sale</h3>
+                                            <h3 className="title">Summer sale</h3>
                                             <img className="price" src="assets/images/banner/sale/sale-banner6-1.1.webp" alt="" />
                                             <Link to="#" className="link">Shop now</Link>
                                         </div>

@@ -1,70 +1,70 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ManageBar from '../../components/managebar';
-import { getAllColors } from '../../services/api';
+import { getAllSizes } from '../../services/api';
 import { toast } from 'react-toastify';
-import AddColorForm from './AddColorForm';
-import EditColorForm from './EditColorForm';
+import AddSizeForm from './AddSizeForm';
+import EditSizeForm from './EditSizeForm';
 
-const ColorManagement = () => {
-  const [colors, setColors] = useState([]);
+const SizeManagement = () => {
+  const [sizes, setSizes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [editingColor, setEditingColor] = useState(null);
+  const [editingSize, setEditingSize] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  // Load colors when component mounts
+  // Load sizes when component mounts
   useEffect(() => {
-    loadColors();
+    loadSizes();
   }, [currentPage]);
 
-  const loadColors = async () => {
+  const loadSizes = async () => {
     try {
       setIsLoading(true);
-      const response = await getAllColors(currentPage);
+      const response = await getAllSizes(currentPage);
       
       if (response && response.code === 200 && response.data) {
-        setColors(response.data.data);
+        setSizes(response.data.data);
         setTotalPages(response.data.total_pages);
       } else {
-        toast.error('Failed to load colors');
+        toast.error('Failed to load sizes');
       }
     } catch (error) {
-      console.error('Error loading colors:', error);
-      toast.error('An error occurred while loading colors');
+      console.error('Error loading sizes:', error);
+      toast.error('An error occurred while loading sizes');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Handle successful color creation
-  const handleColorCreated = async () => {
+  // Handle successful size creation
+  const handleSizeCreated = async () => {
     setShowAddForm(false);
-    loadColors();
+    loadSizes();
   };
 
-  // Handle color edit
-  const handleEditColor = (color) => {
-    setEditingColor(color);
+  // Handle size edit
+  const handleEditSize = (size) => {
+    setEditingSize(size);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Handle successful color update
-  const handleColorUpdated = async () => {
-    setEditingColor(null);
-    loadColors();
+  // Handle successful size update
+  const handleSizeUpdated = async () => {
+    setEditingSize(null);
+    loadSizes();
   };
 
   // Handle cancel edit
   const handleCancelEdit = () => {
-    setEditingColor(null);
+    setEditingSize(null);
   };
 
-  // Filter colors based on search term
-  const filteredColors = colors.filter(color =>
-    color && color.name && color.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // Filter sizes based on search term
+  const filteredSizes = sizes.filter(size =>
+    size && size.name && size.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -74,10 +74,10 @@ const ColorManagement = () => {
         <div className="row">
           <div className="col">
             <div className="page-title">
-              <h1 className="title">Color Management</h1>
+              <h1 className="title">Size Management</h1>
               <ul className="breadcrumb">
                 <li className="breadcrumb-item"><Link to="/">Home</Link></li>
-                <li className="breadcrumb-item active">Color</li>
+                <li className="breadcrumb-item active">Size</li>
               </ul>
             </div>
           </div>
@@ -92,7 +92,7 @@ const ColorManagement = () => {
                 <div className="cart-coupon">
                   <input 
                     type="text" 
-                    placeholder="Search colors..." 
+                    placeholder="Search sizes..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
@@ -102,16 +102,16 @@ const ColorManagement = () => {
                 </div>
               </div>
               <div className="col-auto">
-                {!editingColor && (
+                {!editingSize && (
                   <button 
                     className="btn btn-dark btn-outline-hover-dark mb-3" 
                     type="button"
                     onClick={() => setShowAddForm(!showAddForm)}
                   >
-                    {showAddForm ? 'Close Form' : 'Add New Color'}
+                    {showAddForm ? 'Close Form' : 'Add New Size'}
                   </button>
                 )}
-                {editingColor && (
+                {editingSize && (
                   <button 
                     className="btn btn-secondary mb-3" 
                     type="button"
@@ -123,19 +123,19 @@ const ColorManagement = () => {
               </div>
             </div>
 
-            {/* Add color form */}
-            {showAddForm && !editingColor && (
-              <AddColorForm 
-                onColorCreated={handleColorCreated}
+            {/* Add size form */}
+            {showAddForm && !editingSize && (
+              <AddSizeForm 
+                onSizeCreated={handleSizeCreated}
                 onCancel={() => setShowAddForm(false)}
               />
             )}
             
-            {/* Edit color form */}
-            {editingColor && (
-              <EditColorForm 
-                color={editingColor}
-                onColorUpdated={handleColorUpdated}
+            {/* Edit size form */}
+            {editingSize && (
+              <EditSizeForm 
+                size={editingSize}
+                onSizeUpdated={handleSizeUpdated}
                 onCancel={handleCancelEdit}
               />
             )}
@@ -145,13 +145,13 @@ const ColorManagement = () => {
                 <div className="spinner-border" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </div>
-                <p className="mt-2">Loading colors...</p>
+                <p className="mt-2">Loading sizes...</p>
               </div>
             ) : (
               <>
-                {filteredColors.length === 0 ? (
+                {filteredSizes.length === 0 ? (
                   <div className="alert alert-info mt-4">
-                    No colors found. Please add a new color!
+                    No sizes found. Please add a new size!
                   </div>
                 ) : (
                   <>
@@ -160,57 +160,35 @@ const ColorManagement = () => {
                         <thead>
                           <tr>
                             <th>Name</th>
-                            <th>Color</th>
                             <th>Actions</th>
                             <th>Name</th>
-                            <th>Color</th>
                             <th>Actions</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {Array.from({ length: Math.ceil(filteredColors.length / 2) }).map((_, rowIndex) => (
+                          {Array.from({ length: Math.ceil(filteredSizes.length / 2) }).map((_, rowIndex) => (
                             <tr key={rowIndex}>
-                              {/* First color in the row */}
-                              <td>{filteredColors[rowIndex * 2].name}</td>
-                              <td>
-                                <div 
-                                  style={{ 
-                                    width: '30px', 
-                                    height: '30px', 
-                                    backgroundColor: filteredColors[rowIndex * 2].colorCode,
-                                    border: '1px solid #ddd'
-                                  }}
-                                ></div>
-                              </td>
+                              {/* First size in the row */}
+                              <td>{filteredSizes[rowIndex * 2].name}</td>
                               <td>
                                 <button 
                                   type="button" 
                                   className="btn btn-primary btn-sm"
-                                  onClick={() => handleEditColor(filteredColors[rowIndex * 2])}
+                                  onClick={() => handleEditSize(filteredSizes[rowIndex * 2])}
                                 >
                                   <i className="fas fa-edit"></i> Edit
                                 </button>
                               </td>
 
-                              {/* Second color in the row (if exists) */}
-                              {filteredColors[rowIndex * 2 + 1] && (
+                              {/* Second size in the row (if exists) */}
+                              {filteredSizes[rowIndex * 2 + 1] && (
                                 <>
-                                  <td>{filteredColors[rowIndex * 2 + 1].name}</td>
-                                  <td>
-                                    <div 
-                                      style={{ 
-                                        width: '30px', 
-                                        height: '30px', 
-                                        backgroundColor: filteredColors[rowIndex * 2 + 1].colorCode,
-                                        border: '1px solid #ddd'
-                                      }}
-                                    ></div>
-                                  </td>
+                                  <td>{filteredSizes[rowIndex * 2 + 1].name}</td>
                                   <td>
                                     <button 
                                       type="button" 
                                       className="btn btn-primary btn-sm"
-                                      onClick={() => handleEditColor(filteredColors[rowIndex * 2 + 1])}
+                                      onClick={() => handleEditSize(filteredSizes[rowIndex * 2 + 1])}
                                     >
                                       <i className="fas fa-edit"></i> Edit
                                     </button>
@@ -269,4 +247,4 @@ const ColorManagement = () => {
   );
 };
 
-export default ColorManagement; 
+export default SizeManagement; 

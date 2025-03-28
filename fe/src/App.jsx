@@ -24,6 +24,7 @@ import OrderSuccess from './pages/ordersuccess';
 import OrderDetail from './pages/orderdetail';
 import './styles/ordersuccess.css';
 import ColorManagement from './pages/colormanage';
+import SizeManagement from './pages/sizemanage';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -101,6 +102,8 @@ export default function App() {
             { path: "/order-management", element: <OrderManagement /> },
             { path: "/user-management", element: <UserManagement /> },
             { path: "/color-management", element: <ColorManagement /> },
+            { path: "/size-management", element: <SizeManagement /> },
+
           ],
         },
       ],

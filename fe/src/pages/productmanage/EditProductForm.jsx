@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchProductDetail, updateProductDetail } from '../../services/api';
+import { fetchProductDetail, updateProductDetail, getAllColors, getAllSizes, getAllCategories } from '../../services/api';
 import { toast } from 'react-toastify';
 
 const EditProductForm = ({ productId, product, onSuccess, onCancel }) => {
@@ -18,28 +18,41 @@ const EditProductForm = ({ productId, product, onSuccess, onCancel }) => {
   const [thumbnailPreviews, setThumbnailPreviews] = useState([]);
   const [existingThumbnails, setExistingThumbnails] = useState([]);
 
-  // Color mapping (this should be fetched from API in a real implementation)
-  const colorOptions = [
-    { id: "1", name: "Red" },
-    { id: "2", name: "Blue" },
-    { id: "3", name: "Green" },
-    { id: "4", name: "Black" },
-    { id: "5", name: "White" }
-  ];
-  
-  // Size mapping (this should be fetched from API in a real implementation)
-  const sizeOptions = [
-    { id: "1", name: "S" },
-    { id: "2", name: "M" },
-    { id: "3", name: "L" },
-    { id: "4", name: "XL" },
-    { id: "5", name: "XXL" }
-  ];
+  // State for options
+  const [colors, setColors] = useState([]);
+  const [sizes, setSizes] = useState([]);
+  const [categories, setCategories] = useState([]);
 
-  // Fetch product details when component mounts
+  // Load options when component mounts
   useEffect(() => {
+    loadOptions();
     loadProductDetail();
   }, [productId]);
+
+  const loadOptions = async () => {
+    try {
+      // Load colors
+      const colorsResponse = await getAllColors();
+      if (colorsResponse && colorsResponse.code === 200 && colorsResponse.data) {
+        setColors(colorsResponse.data.data);
+      }
+
+      // Load sizes
+      const sizesResponse = await getAllSizes();
+      if (sizesResponse && sizesResponse.code === 200 && sizesResponse.data) {
+        setSizes(sizesResponse.data.data);
+      }
+
+      // Load categories
+      const categoriesResponse = await getAllCategories();
+      if (categoriesResponse && categoriesResponse.code === 200 && categoriesResponse.data) {
+        setCategories(categoriesResponse.data.data);
+      }
+    } catch (error) {
+      console.error('Error loading options:', error);
+      toast.error('Failed to load form options');
+    }
+  };
 
   // Function to load product details
   const loadProductDetail = async () => {
@@ -50,27 +63,11 @@ const EditProductForm = ({ productId, product, onSuccess, onCancel }) => {
       if (response && response.code === 200 && response.data) {
         const data = response.data;
         
-        // Find color IDs based on color names from response
-        const selectedColorIds = data.colors
-          ? data.colors.map(colorName => {
-              const colorOption = colorOptions.find(opt => opt.name === colorName);
-              return colorOption ? colorOption.id : null;
-            }).filter(id => id !== null)
-          : [];
-        
-        // Find size IDs based on size names from response
-        const selectedSizeIds = data.sizes
-          ? data.sizes.map(sizeName => {
-              const sizeOption = sizeOptions.find(opt => opt.name === sizeName);
-              return sizeOption ? sizeOption.id : null;
-            }).filter(id => id !== null)
-          : [];
-        
         // Set product detail state
         setProductDetail({
           description: data.description || '',
-          colorIds: selectedColorIds,
-          sizeIds: selectedSizeIds
+          colorIds: data.colors ? data.colors.map(color => color.id) : [],
+          sizeIds: data.sizes ? data.sizes.map(size => size.id) : []
         });
         
         // Set existing thumbnails
@@ -216,7 +213,7 @@ const EditProductForm = ({ productId, product, onSuccess, onCancel }) => {
               <h6>Product Information</h6>
               <p><strong>ID:</strong> {productId}</p>
               <p><strong>Name:</strong> {product.name}</p>
-              <p><strong>Category:</strong> {product.categoryName}</p>
+              <p><strong>Category:</strong> {product.category}</p>
               <p><strong>Price:</strong> ${product.price}</p>
             </div>
           </div>
@@ -262,8 +259,10 @@ const EditProductForm = ({ productId, product, onSuccess, onCancel }) => {
               onChange={handleMultiSelectChange}
               value={productDetail.colorIds}
             >
-              {colorOptions.map(color => (
-                <option key={color.id} value={color.id}>{color.name}</option>
+              {colors.map(color => (
+                <option key={color.id} value={color.id} style={{ color: color.colorCode }}>
+                  {color.name}
+                </option>
               ))}
             </select>
             <small className="form-text text-muted">Hold Ctrl (or Cmd) to select multiple options</small>
@@ -279,8 +278,10 @@ const EditProductForm = ({ productId, product, onSuccess, onCancel }) => {
               onChange={handleMultiSelectChange}
               value={productDetail.sizeIds}
             >
-              {sizeOptions.map(size => (
-                <option key={size.id} value={size.id}>{size.name}</option>
+              {sizes.map(size => (
+                <option key={size.id} value={size.id}>
+                  {size.name}
+                </option>
               ))}
             </select>
             <small className="form-text text-muted">Hold Ctrl (or Cmd) to select multiple options</small>

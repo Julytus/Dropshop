@@ -310,7 +310,7 @@ const ProductDetail = () => {
                             </div>
                             <h3 className="product-title">{product.name}</h3>
                             <div className="product-price">${product.price}</div>
-                            <div className="product-description">
+                            <div className="product-description" style={{ whiteSpace: 'pre-line' }}>
                                 <p>{productDetail.description || 'No description available'}</p>
                             </div>
                             <div className="product-variations">
