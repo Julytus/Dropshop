@@ -121,7 +121,8 @@ const Orders = () => {
                 <thead>
                   <tr>
                     <th>Order ID</th>
-                    <th>Date</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
                     <th>Status</th>
                     <th>Total</th>
                     <th>Action</th>
@@ -132,9 +133,10 @@ const Orders = () => {
                     <tr key={order.id}>
                       <td>#{order.id.substring(0, 8)}</td>
                       <td>{formatDate(order.created_at)}</td>
+                      <td>{formatDate(order.updated_at)}</td> 
                       <td>
-                        <span className={getStatusClass('processing')}>
-                          Processing
+                        <span className={getStatusClass(order.status)}>
+                          {order.status}
                         </span>
                       </td>
                       <td>${order.total_price?.toFixed(2) || '0.00'}</td>

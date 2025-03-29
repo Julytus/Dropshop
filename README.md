@@ -42,6 +42,7 @@ Search Update – Enhancing the search functionality for the frontend (Planned)
         <tr valign="top">
             <td>
                 <img src="screenshots/productmanage.png"/>
+                <img src="screenshots/order-manage.png">
                 <img src="screenshots/checkout.png"/>
                 <img src="screenshots/another.png"/>
             </td>
@@ -49,6 +50,7 @@ Search Update – Enhancing the search functionality for the frontend (Planned)
                 <img src="screenshots/home1.png"/>
                 <img src="screenshots/home2.png"/>
                 <img src="screenshots/product-detail.png"/>
+                <img src="screenshots/order-detail.png"/>
             </td>
         </tr>
     </tbody>

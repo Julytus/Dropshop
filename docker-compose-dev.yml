@@ -1,71 +1,4 @@
 services:
-  backend:
-    build:
-      context: .
-      dockerfile: docker/backend/Dockerfile
-    container_name: backend
-    depends_on:
-      mysql:
-        condition: service_healthy
-      redis:
-        condition: service_started
-      elasticsearch:
-        condition: service_started
-      minio:
-        condition: service_started
-    ports:
-      - "8088:8088"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?createDatabaseIfNotExist=true
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQL8Dialect
-      - KAFKA_SERVERS=kafka:9092
-      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
-      - REDIS_HOST=redis
-      - REDIS_PORT=${REDIS_PORT}
-      - MINIO_URL=http://${HOSTNAME}:${MINIO_API_PORT}
-      - MINIO_ACCESS_KEY=${MINIO_ROOT_USER}
-      - MINIO_SECRET_KEY=${MINIO_ROOT_PASSWORD}
-      - SPRING_ELASTICSEARCH_URIS=http://elasticsearch:9200
-      - SERVER_PORT=8088
-    extra_hosts:
-      - "api.julytus.site:host-gateway"
-      - "julytus:host-gateway"
-    networks:
-      - july
-
-  frontend:
-    build:
-      context: .
-      dockerfile: docker/frontend/Dockerfile
-      args:
-        - VITE_API_URL=http://api.julytus.site:8088
-    container_name: frontend
-    ports:
-      - "80:80"
-    restart: always
-    environment:
-      - DOMAIN=api.julytus.site julytus
-      - VIRTUAL_HOST=api.julytus.site
-      - VIRTUAL_PORT=80
-    extra_hosts:
-      - "api.julytus.site:host-gateway"
-      - "julytus:host-gateway"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    networks:
-      - july
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
-
   #Minio
   minio:
     image: minio/minio
@@ -127,7 +60,6 @@ services:
       - "9200:9200"
     networks:
       - july
-
   kibana:
     image: docker.elastic.co/kibana/kibana:8.12.1
     container_name: kibana
@@ -175,7 +107,7 @@ services:
       - july
 volumes:
   elasticsearch_data:
-    driver: local
+    name: local
   minio_data:
     name: minio
 

@@ -98,6 +98,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public OrderResponse updateStatus(String orderId, String status) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+
+        order.setStatus(status);
+        return OrderResponseMapper.fromOrder(orderRepository.save(order));
+    }
+
+    @Override
     @IsUser
     public PageResponse<OrderResponse> getMyOrders(int page, int limit) {
         String username = SecurityUtil.getCurrentLogin()
@@ -105,6 +114,20 @@ public class OrderServiceImpl implements OrderService {
 
         Pageable pageable = PageRequest.of(page - 1, limit);
         Page<Order> orderPage = orderRepository.findByUser_Email(username, pageable);
+
+        return PageResponse.<OrderResponse>builder()
+                .currentPage(page)
+                .pageSize(orderPage.getSize())
+                .totalPages(orderPage.getTotalPages())
+                .totalElements(orderPage.getTotalElements())
+                .data(OrderResponseMapper.fromPageOrder(orderPage))
+                .build();
+    }
+
+    @Override
+    public PageResponse<OrderResponse> getAllOrders(int page, int limit) {
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        Page<Order> orderPage = orderRepository.findAll(pageable);
 
         return PageResponse.<OrderResponse>builder()
                 .currentPage(page)
