@@ -339,6 +339,41 @@ export const getOrderDetail = async (orderId) => {
     }
 };
 
+export const getAllOrders = async (page = 1, limit = 10) => {
+    try {
+        const response = await axios.get('/api/v1/order-all', {
+            params: {
+                page,
+                limit
+            },
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('API getAllOrders, Error:', error);
+        throw error;
+    }
+};
+
+export const updateOrderStatus = async (orderId, status) => {
+    try {
+        const response = await axios.put(`/api/v1/order/${orderId}`, {
+            status: status
+        }, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('API updateOrderStatus, Error:', error);
+        throw error;
+    }
+};
+
 //Category
 export const getAllCategories = async (page = 1, limit = 10) => {
     try {

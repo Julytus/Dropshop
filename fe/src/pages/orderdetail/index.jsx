@@ -167,9 +167,15 @@ const OrderDetail = () => {
                     <div className="order-header mb-4">
                         <div className="row align-items-center">
                             <div className="col-lg-8">
-                                <h2 className="mb-2">Order Details #{order.id.substring(0, 8)}</h2>
+                                <h2 className="mb-2">Order Details</h2>
+                                <p className="mb-2">
+                                    <strong>Order ID:</strong> #{order.id}
+                                </p>
                                 <p className="mb-2">
                                     <strong>Order Date:</strong> {formatDate(order.created_at)}
+                                </p>
+                                <p className="mb-2">
+                                    <strong>Updated At:</strong> {formatDate(order.updated_at)}
                                 </p>
                                 <p className="mb-0">
                                     <strong>Status:</strong> 

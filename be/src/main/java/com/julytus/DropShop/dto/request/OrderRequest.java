@@ -16,5 +16,6 @@ public class OrderRequest {
     String emailAddress;
     String phoneNumber;
     String orderNotes;
+    String status;
     String token;
 }
