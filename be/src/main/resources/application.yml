@@ -41,7 +41,7 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
 minio:
-  url: ${MINIO_URL:http://localhost:9000}
+  url: ${MINIO_URL:http://api.julytus.site:9000}
   access-key: ${MINIO_ACCESS_KEY:minioadmin}
   secret-key: ${MINIO_SECRET_KEY:minioadmin}
   avatar-bucket: ${AVATAR_BUKET:avatar}
